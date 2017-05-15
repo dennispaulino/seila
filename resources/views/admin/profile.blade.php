@@ -10,244 +10,90 @@
 
 @section('content')
     
-   <div class="row">
-       
-       <!--***********************************************************-->
-       <!--***************INICIO - Lista dos Utilizadores*************-->
-       <!--***********************************************************-->
-        <div class=" col-sm-5 col-lg-3"> 
-            
-                       
-            <h3>Users </h3>
-            
-            
-                <div id="list" >
-                <ul style="width: 200px; height: 400px; overflow-x: hidden;overflow-y: auto;" >
-                    <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-                <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-                <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-                <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-               
-                   </ul> 
-                </div>
-            
-            
-        </div>
-       <!--***********************************************************-->
-       <!--***************FIM - Lista dos Utilizadores*************-->
-       <!--***********************************************************-->
-       
-       
-       
-       <!--********************************************************************************************************************************-->
-       <!--***************INICIO - Detalhes (dados, estatisticas - gráficos, avisos, histórico sobre os  Utilizadores)************************************-->
-       <!--********************************************************************************************************************************-->
-       
-       <div class="col-sm-7 col-lg-9">
-            
-           <h3> User : </h3>
+  <div class="container"  style ='background-color: #abebc6 ;'>
+      <div class="row"  style ='background-color: #abebc6 ;'>
+      <div class="col-md-12 col-xs-4   "  style ='background-color:  #abebc6 ;'>
+          <A href="edit.html" >Edit </A>
 
-            <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#statistic">Statistics</a></li>
-                <li><a data-toggle="tab" href="#personalinformation">Personal Information</a></li>
-                <li><a data-toggle="tab" href="#warning">Warning</a></li>
-                <li><a data-toggle="tab" href="#history">History</a></li>
-            </ul>
+       <br>
 
-            <div class="tab-content">
-              
+      </div>
+        
+          <div class="panel panel-info" >
+            <div class="panel-heading" style ='background-color:  #FFFFFF ;'>
+              <h2 class="panel-title">{{Auth::user()->name}}</h2>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="http://icons.iconarchive.com/icons/dakirby309/windows-8-metro/256/Folders-OS-User-No-Frame-Metro-icon.png" class="img-circle img-responsive"> </div>
                 
-            <!--***********************************************************-->
-            <!--***************INICIO - Dados dos Utilizadores*************-->
-            <!--***********************************************************-->
-            
-                <div id="personalinformation" class="tab-pane fade">
-                <h3>Menu 1</h3>
-                <p>Some content in menu 1.</p>
+                <div class=" col-md-9 col-lg-9 ">   <!--<div class="col-xs-10 col-sm-10 hidden-md hidden-lg"> <br>
+                  <dl>
+                    <dt>DEPARTMENT:</dt>
+                    <dd>Administrator</dd>
+                    <dt>HIRE DATE</dt>
+                    <dd>11/12/2013</dd>
+                    <dt>DATE OF BIRTH</dt>
+                       <dd>11/12/2013</dd>
+                    <dt>GENDER</dt>
+                    <dd>Male</dd>
+                  </dl>
+                </div>-->
+                 <table class="table table-user-information">
+                    <tbody>
+                      <tr>
+                        <td>Department:</td>
+                        <td>Programming</td>
+                      </tr>
+                      <tr>
+                        <td>Hire date:</td>
+                        <td>06/23/2013</td>
+                      </tr>
+                      <tr>
+                        <td>Date of Birth</td>
+                        <td>01/24/1988</td>
+                      </tr>
+                   
+                         <tr>
+                             <tr>
+                        <td>Gender</td>
+                        <td>Female</td>
+                      </tr>
+                        <tr>
+                        <td>Home Address</td>
+                        <td>Kathmandu,Nepal</td>
+                      </tr>
+                      <tr>
+                        <td>Email</td>
+                        <td><a href="mailto:info@support.com">info@support.com</a></td>
+                      </tr>
+                        <td>Phone Number</td>
+                        <td>123-4567-890(Landline)<br><br>555-4567-890(Mobile)
+                        </td>
+                           
+                      </tr>
+                     
+                    </tbody>
+                  </table>
+                  
+                  <a href="#" class="btn btn-primary">My Sales Performance</a>
+                  <a href="#" class="btn btn-primary">Team Sales Performance</a>
                 </div>
-            
-             <!--***********************************************************-->
-            <!--***************FIM - Dados dos Utilizadores*************-->
-            <!--***********************************************************-->
-            
-             <!--***********************************************************-->
-            <!--***************INICIO - Estatísticas dos Utilizadores*************-->
-            <!--***********************************************************-->
-            
-                <div id="statistic" class="tab-pane fade in active">
-                <h3>Information</h3>
-                <p>Some content.</p>
-
-                <!-- Flot Charts based on user statistics -->
-               
-                  <div class="row">
-                    <div class="col-xs-12">
-                      <!-- interactive chart -->
-                      <div class="box box-primary">
-                        <div class="box-header with-border">
-                          <i class="fa fa-bar-chart-o"></i>
-
-                          <h3 class="box-title">Interactive Area Chart</h3>
-
-                          <div class="box-tools pull-right">
-                            Real time
-                            <div class="btn-group" id="realtime" data-toggle="btn-toggle">
-                              <button type="button" class="btn btn-default btn-xs active" data-toggle="on">On</button>
-                              <button type="button" class="btn btn-default btn-xs" data-toggle="off">Off</button>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="box-body">
-                          <div id="interactive" style="height: 300px;"></div>
-                        </div>
-                        <!-- /.box-body-->
-                      </div>
-                      <!-- /.box -->
-
-                    </div>
-                    <!-- /.col -->
-                  </div>
-                  <!-- /.row -->
-
-                  <div class="row">
-                    <div class="col-md-6">
-                      <!-- Line chart -->
-                      <div class="box box-primary">
-                        <div class="box-header with-border">
-                          <i class="fa fa-bar-chart-o"></i>
-
-                          <h3 class="box-title">Line Chart</h3>
-
-                          <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                          </div>
-                        </div>
-                        <div class="box-body">
-                          <div id="line-chart" style="height: 300px;"></div>
-                        </div>
-                        <!-- /.box-body-->
-                      </div>
-                      <!-- /.box -->
-
-                      <!-- Area chart -->
-                      <div class="box box-primary">
-                        <div class="box-header with-border">
-                          <i class="fa fa-bar-chart-o"></i>
-
-                          <h3 class="box-title">Full Width Area Chart</h3>
-
-                          <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                          </div>
-                        </div>
-                        <div class="box-body">
-                          <div id="area-chart" style="height: 338px;" class="full-width-chart"></div>
-                        </div>
-                        <!-- /.box-body-->
-                      </div>
-                      <!-- /.box -->
-
-                    </div>
-                    <!-- /.col -->
-
-                    <div class="col-md-6">
-                      <!-- Bar chart -->
-                      <div class="box box-primary">
-                        <div class="box-header with-border">
-                          <i class="fa fa-bar-chart-o"></i>
-
-                          <h3 class="box-title">Bar Chart</h3>
-
-                          <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                          </div>
-                        </div>
-                        <div class="box-body">
-                          <div id="bar-chart" style="height: 300px;"></div>
-                        </div>
-                        <!-- /.box-body-->
-                      </div>
-                      <!-- /.box -->
-
-                      <!-- Donut chart -->
-                      <div class="box box-primary">
-                        <div class="box-header with-border">
-                          <i class="fa fa-bar-chart-o"></i>
-
-                          <h3 class="box-title">Donut Chart</h3>
-
-                          <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                          </div>
-                        </div>
-                        <div class="box-body">
-                          <div id="donut-chart" style="height: 300px;"></div>
-                        </div>
-                        <!-- /.box-body-->
-                      </div>
-                      <!-- /.box -->
-                    </div>
-                    <!-- /.col -->
-                  </div>
-                  <!-- /.row -->
-             
-
-                </div>
-    <!-- /.content -->
-
-                <!--***********************************************************-->
-            <!--***************FIM - Estatísticas do Utilizador*************-->
-            <!--***********************************************************-->
-
-            <!--***********************************************************-->
-            <!--***************Inicio - Warning do Utilizador*************-->
-            <!--***********************************************************-->
-            <div id="warning" class="tab-pane fade">
-              <h3>Menu 2</h3>
-              <p>Some content in menu 2.</p>
+              </div>
             </div>
-              <!--***********************************************************-->
-            <!--***************FIM - Warning do Utilizador*************-->
-            <!--***********************************************************-->
-
-              <!--***********************************************************-->
-            <!--***************Inicio - Histórico do Utilizador*************-->
-            <!--***********************************************************-->
-             <div id="history" class="tab-pane fade">
-              <h3>Menu 2</h3>
-              <p>Some content in menu 2.</p>
-            </div>
-             <!--***********************************************************-->
-            <!--***************FIM - Histórico do Utilizador*************-->
-            <!--***********************************************************-->
-        </div>
-
+                 <div class="panel-footer">
+                        <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
+                        <span class="pull-right">
+                            <a href="edit.html" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                            <a data-original-title="Remove this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                        </span>
+                    </div>
             
-        </div>
-       
-   
-       <!--********************************************************************************************************************************-->
-       <!--*************** FIM - Detalhes (dados, estatisticas - gráficos, avisos sobre os  Utilizadores)************************************-->
-       <!--********************************************************************************************************************************-->
-       
-   </div>
-   
+          </div>
+           </div>
+            
+          </div>
+        
     <br>
     <br>
     <br>

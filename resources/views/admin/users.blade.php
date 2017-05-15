@@ -58,7 +58,7 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#statistic">Statistics</a></li>
                 <li><a data-toggle="tab" href="#personalinformation">Personal Information</a></li>
-                <li><a data-toggle="tab" href="#warning">Warning</a></li>
+                <li><a data-toggle="tab" href="#warning">Warnings</a></li>
                 <li><a data-toggle="tab" href="#history">History</a></li>
             </ul>
 
