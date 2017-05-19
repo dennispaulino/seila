@@ -1,36 +1,36 @@
 @extends('adminlte::page')
 
 @section('title', 'AdminLTE')
-
-<?php
-use GuzzleHttp\Client;
-
-$userid=Auth::user()->id;
-$client = new Client();
-$response = $client->get('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid);
-//$response = $client->get('http://192.168.109.1/~nanostima/relationuser.php?'.$userid);
- 
-$code = $response->getStatusCode();
-$message = $response->getBody();
-
-$obj = json_decode($response->getBody());
-   echo $obj->alldata->status->status;
-if( $obj->alldata->status->status!=7)
-    { 
-       echo "This user has no patient";
-       $usersPatients=0;
-   }
-  else
-    {
-      
-      
-      $usersPatients= count($obj->alldata->data->result);
-//      foreach ($obj->alldata->data->result as $row)
-//          {
-//            print $row->idUserProfessional;
-//          }
-   }
-?>
+<!--
+//<?ph
+//use GuzzleHttp\Client;
+//
+//$userid=Auth::user()->id;
+//$client = new Client();
+//$response = $client->get('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid);
+////$response = $client->get('http://192.168.109.1/~nanostima/relationuser.php?'.$userid);
+// 
+//$code = $response->getStatusCode();
+//$message = $response->getBody();
+//
+//$obj = json_decode($response->getBody());
+//   echo $obj->alldata->status->status;
+//if( $obj->alldata->status->status!=7)
+//    { 
+//       echo "This user has no patient";
+//       $usersPatients=0;
+//   }
+//  else
+//    {
+//      
+//      
+//      $usersPatients= count($obj->alldata->data->result);
+////      foreach ($obj->alldata->data->result as $row)
+////          {
+////            print $row->idUserProfessional;
+////          }
+//   }
+//?>-->
 
 
           
@@ -49,7 +49,8 @@ if( $obj->alldata->status->status!=7)
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>  <?php  echo $usersPatients; ?> </h3>
+              <h3>  <?php $usersPatients=10;
+                      echo $usersPatients; ?> </h3>
 
               <p>Users</p>
             </div>
@@ -168,47 +169,30 @@ if( $obj->alldata->status->status!=7)
      </div>
      <div class="box-body">
 <!-- Table row -->
-        <div class="row">
-          <div class="col-xs-12 table-responsive">
-            <table class="table table-striped">
+        
+            <table class="table table-striped" >
               <thead>
               <tr>
-                <th>Qty</th>
-                <th>Product</th>
-                <th>Serial #</th>
-                <th>Description</th>
-                <th>Subtotal</th>
+                <th width="80%">Content</th>
+                <th width="13%">Date</th>
+                <th >Action</th>
               </tr>
               </thead>
               <tbody>
-              <tr>
-                <td>1</td>
-                <td>Call of Duty</td>
-                <td>455-981-221</td>
-                <td>El snort testosterone trophy driving gloves handsome</td>
-                <td>$64.50</td>
+                
+               <tr >
+               
+                    <td width="80%" style="color:orange" > The user with the id 1 missed his objective of walking 1 hour  </td>
+                    <td width="13%">03/02/2017</td>
+                    <td style>{{Form::button('Send Message',['onClick'=>'#'])}}</td>
               </tr>
-              <tr>
-                <td>1</td>
-                <td>Need for Speed IV</td>
-                <td>247-925-726</td>
-                <td>Wes Anderson umami biodiesel</td>
-                <td>$50.00</td>
+               <tr>
+               
+                    <td width="80%" style="color:red"> The user with the id 4 send an emergency notification at 18:07 01/02/2017 on location  long : -4.09224 lat: 31.029382.  <br> Click to see on the map.   </td>
+                    <td width="13%">03/02/2017</td>
+                    <td >{{Form::button('Send Message',['onClick'=>'#'])}}</td>
               </tr>
-              <tr>
-                <td>1</td>
-                <td>Monsters DVD</td>
-                <td>735-845-642</td>
-                <td>Terry Richardson helvetica tousled street art master</td>
-                <td>$10.70</td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>Grown Ups Blue Ray</td>
-                <td>422-568-642</td>
-                <td>Tousled lomo letterpress</td>
-                <td>$25.99</td>
-              </tr>
+             
               </tbody>
             </table>
           </div>

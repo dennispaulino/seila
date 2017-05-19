@@ -12,22 +12,23 @@
     
   <div class="container"  style ='background-color: #abebc6 ;'>
       <div class="row"  style ='background-color: #abebc6 ;'>
-      <div class="col-md-12 col-xs-4   "  style ='background-color:  #abebc6 ;'>
-          <A href="edit.html" >Edit </A>
-
+      <div class="col-md-12 col-xs-4"  style ='background-color: #abebc6;'>
+       <div class="pull-right"> 
+          {{Form::button('Edit',['onClick'=>'editProfile()'])}}
+       </div>
        <br>
 
       </div>
         
           <div class="panel panel-info" >
             <div class="panel-heading" style ='background-color:  #FFFFFF ;'>
-              <h2 class="panel-title">{{Auth::user()->name}}</h2>
+                <h2>{{Auth::user()->name}}</h2>
             </div>
             <div class="panel-body">
               <div class="row">
                 <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="http://icons.iconarchive.com/icons/dakirby309/windows-8-metro/256/Folders-OS-User-No-Frame-Metro-icon.png" class="img-circle img-responsive"> </div>
                 
-                <div class=" col-md-9 col-lg-9 ">   <!--<div class="col-xs-10 col-sm-10 hidden-md hidden-lg"> <br>
+                <div class=" col-md-9 col-lg-9 " id="profile-info">   <!--<div class="col-xs-10 col-sm-10 hidden-md hidden-lg"> <br>
                   <dl>
                     <dt>DEPARTMENT:</dt>
                     <dd>Administrator</dd>
@@ -76,18 +77,12 @@
                     </tbody>
                   </table>
                   
-                  <a href="#" class="btn btn-primary">My Sales Performance</a>
-                  <a href="#" class="btn btn-primary">Team Sales Performance</a>
+                  <a href="#" class="btn btn-primary">Change Password</a>
+               
                 </div>
               </div>
             </div>
-                 <div class="panel-footer">
-                        <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
-                        <span class="pull-right">
-                            <a href="edit.html" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
-                            <a data-original-title="Remove this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
-                        </span>
-                    </div>
+              
             
           </div>
            </div>
@@ -102,6 +97,7 @@
     <br>
     <br>  
     
+     
   <footer class="main-footer">
     <div>
         <b>Version 1.0</b>
@@ -445,9 +441,39 @@
 </script>
 
 
+      
+      <script>
+         function editProfile(){
+         $msg = "<form action='#' method='POST' id='profile'> <div class='form-group'> <label for='name'>Name:</label> <input type='text' class='form-control' id='name'> </div><div class='form-group'><label for='number'>CellPhone Number:</label><input type='number' pattern='.{9,15}' required oninvalid='this.setCustomValidity('Zero or minimum 3 characters required')' class='form-control' id='cellphone'></div><input type='hidden' name='_token' value='{{ csrf_token() }}'><button type='submit' class='btn btn-default'>Submit</button></form> ";    
+        $.ajax({
+               type:'POST',
+                success:function(){
+                  $("#profile-info").html($msg);
+               }
+            });
+         }
+      </script>
+      
+      
+      
+      <script type="text/javascript">
+jQuery.validator.setDefaults({
+    debug: true,
+    success: "valid"
+});;
+</script>
 
-
-
-
+  <script>
+  $(document).ready(function(){
+    $("#profile").validate({
+  rules: {
+    cellphone: {
+      required: true,
+      minlength: 3
+    }
+  }
+});
+  });
+  </script>
 
 @stop

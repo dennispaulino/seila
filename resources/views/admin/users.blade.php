@@ -88,34 +88,47 @@
 
                 <!-- Flot Charts based on user statistics -->
                
-                  <div class="row">
-                    <div class="col-xs-12">
-                      <!-- interactive chart -->
+                  
+                                <!--
+                ************************************************************
+                ******************************INICIO************************
+                **************Calendar about user´s tasks*******************
+                ************************************************************-->
+                
+                
+                
+                
+                  
+         
+                      <!-- Line chart -->
                       <div class="box box-primary">
                         <div class="box-header with-border">
                           <i class="fa fa-bar-chart-o"></i>
 
-                          <h3 class="box-title">Interactive Area Chart</h3>
+                          <h3 class="box-title">Calendar</h3>
 
                           <div class="box-tools pull-right">
-                            Real time
-                            <div class="btn-group" id="realtime" data-toggle="btn-toggle">
-                              <button type="button" class="btn btn-default btn-xs active" data-toggle="on">On</button>
-                              <button type="button" class="btn btn-default btn-xs" data-toggle="off">Off</button>
-                            </div>
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                           </div>
                         </div>
                         <div class="box-body">
-                          <div id="interactive" style="height: 300px;"></div>
+                            <div id='calendar'></div>
                         </div>
                         <!-- /.box-body-->
                       </div>
-                      <!-- /.box -->
+                   
+                                <!--
+                ************************************************************
+                ******************************FIM************************
+                **************Calendar about user´s tasks*******************
+                ************************************************************-->
 
-                    </div>
-                    <!-- /.col -->
-                  </div>
-                  <!-- /.row -->
+
+                
+                
+                
 
                   <div class="row">
                     <div class="col-md-6">
@@ -305,6 +318,8 @@
   background: #f6f6f6;
 }
     </style>
+    
+<link rel='stylesheet' href='/fullcalendar.css' />
 @stop
 
 @section('js')
@@ -327,6 +342,10 @@
 <script src="/plugins/flot/jquery.flot.pie.min.js"></script>
 <!-- FLOT CATEGORIES PLUGIN - Used to draw bar charts -->
 <script src="/plugins/flot/jquery.flot.categories.min.js"></script>
+
+<script src='/lib-full_calendar/moment.min.js'></script>
+<script src='/dist/js/fullcalendar.min.js'></script>
+
 <!-- Page script -->
     <script> console.log('Hi!'); </script>
     <!-- jQuery 2.2.3 -->
@@ -334,96 +353,7 @@
 <!-- Page script -->
 <script>
   $(function () {
-    /*
-     * Flot Interactive Chart
-     * -----------------------
-     */
-    // We use an inline data source in the example, usually data would
-    // be fetched from a server
-    var data = [], totalPoints = 100;
-
-    function getRandomData() {
-
-      if (data.length > 0)
-        data = data.slice(1);
-
-      // Do a random walk
-      while (data.length < totalPoints) {
-
-        var prev = data.length > 0 ? data[data.length - 1] : 50,
-            y = prev + Math.random() * 10 - 5;
-
-        if (y < 0) {
-          y = 0;
-        } else if (y > 100) {
-          y = 100;
-        }
-
-        data.push(y);
-      }
-
-      // Zip the generated y values with the x values
-      var res = [];
-      for (var i = 0; i < data.length; ++i) {
-        res.push([i, data[i]]);
-      }
-
-      return res;
-    }
-
-    var interactive_plot = $.plot("#interactive", [getRandomData()], {
-      grid: {
-        borderColor: "#f3f3f3",
-        borderWidth: 1,
-        tickColor: "#f3f3f3"
-      },
-      series: {
-        shadowSize: 0, // Drawing is faster without shadows
-        color: "#3c8dbc"
-      },
-      lines: {
-        fill: true, //Converts the line chart to area chart
-        color: "#3c8dbc"
-      },
-      yaxis: {
-        min: 0,
-        max: 100,
-        show: true
-      },
-      xaxis: {
-        show: true
-      }
-    });
-
-    var updateInterval = 500; //Fetch data ever x milliseconds
-    var realtime = "on"; //If == to on then fetch data every x seconds. else stop fetching
-    function update() {
-
-      interactive_plot.setData([getRandomData()]);
-
-      // Since the axes don't change, we don't need to call plot.setupGrid()
-      interactive_plot.draw();
-      if (realtime === "on")
-        setTimeout(update, updateInterval);
-    }
-
-    //INITIALIZE REALTIME DATA FETCHING
-    if (realtime === "on") {
-      update();
-    }
-    //REALTIME TOGGLE
-    $("#realtime .btn").click(function () {
-      if ($(this).data("toggle") === "on") {
-        realtime = "on";
-      }
-      else {
-        realtime = "off";
-      }
-      update();
-    });
-    /*
-     * END INTERACTIVE CHART
-     */
+   
 
 
     /*
@@ -432,11 +362,15 @@
      */
     //LINE randomly generated data
 
-    var sin = [], cos = [];
+    var sin = [], cos = [],dor=[];
+  
+ 
     for (var i = 0; i < 14; i += 0.5) {
       sin.push([i, Math.sin(i)]);
       cos.push([i, Math.cos(i)]);
+      dor.push([i, 0.1*i]);
     }
+    
     var line_data1 = {
       data: sin,
       color: "#3c8dbc"
@@ -598,10 +532,75 @@
   }
 </script>
 
+<!--
+************************************************************
+******************************INICIO************************
+**************Calendar about user´s tasks*******************
+************************************************************-->
+<!--<script>
+    $('#calendar').fullCalendar({
+    dayClick: function() {
+       event.backgroundColor = 'yellow';
+    },
+    
+    eventClick: function(event) {
+        event.backgroundColor = 'yellow';
+        $('#calendar').fullCalendar( 'rerenderEvents' );
+    },
 
 
+    
+})
+    </script>-->
+    
+    <script>
+    
+   
 
+    var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
 
+    var events_array = [
+        {
+        title: 'Test1',
+        start: new Date(2012, 8, 20),
+        tip: 'Personal tip 1'},
+    {
+        title: 'Test2',
+        start: new Date(2012, 8, 21),
+        tip: 'Personal tip 2'}
+    ];
 
+    $('#calendar').fullCalendar({
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek,agendaDay'
+        },
+        selectable: true,
+        events: events_array,
+        eventRender: function(event, element) {
+            element.attr('title', event.tip);
+        },
+        
+           select: function(start, end, jsEvent, view) {
+         // start contains the date you have selected
+         // end contains the end date. 
+         // Caution: the end date is exclusive (new since v2).
+         var allDay = !start.hasTime && !end.hasTime;
+         alert(["Event Start date: " + moment(start).format(),
+                "Event End date: " + moment(end).format(),
+                "AllDay: " + allDay].join("\n"));
+    }
+           });
+
+</script>
+<!--
+************************************************************
+******************************FIM************************
+**************Calendar about user´s tasks*******************
+************************************************************-->
 
 @stop

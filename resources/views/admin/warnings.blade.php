@@ -9,245 +9,50 @@
 @stop
 
 @section('content')
+  <h3>Latests Warnings</h3>
+                  
+<div class="box box-primary">
+     <div class="box-header with-border">
     
-   <div class="row">
+              <i class="ion ion-alert-circled"></i>
        
-       <!--***********************************************************-->
-       <!--***************INICIO - Lista dos Utilizadores*************-->
-       <!--***********************************************************-->
-        <div class=" col-sm-5 col-lg-3"> 
-            
-                       
-            <h3>Users </h3>
-            
-            
-                <div id="list" >
-                <ul style="width: 200px; height: 400px; overflow-x: hidden;overflow-y: auto;" >
-                    <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-                <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-                <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-                <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-               
-                   </ul> 
-                </div>
-            
-            
-        </div>
-       <!--***********************************************************-->
-       <!--***************FIM - Lista dos Utilizadores*************-->
-       <!--***********************************************************-->
-       
-       
-       
-       <!--********************************************************************************************************************************-->
-       <!--***************INICIO - Detalhes (dados, estatisticas - gráficos, avisos, histórico sobre os  Utilizadores)************************************-->
-       <!--********************************************************************************************************************************-->
-       
-       <div class="col-sm-7 col-lg-9">
-            
-           <h3> User : </h3>
+        
 
-            <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#statistic">Statistics</a></li>
-                <li><a data-toggle="tab" href="#personalinformation">Personal Information</a></li>
-                <li><a data-toggle="tab" href="#warning">Warning</a></li>
-                <li><a data-toggle="tab" href="#history">History</a></li>
-            </ul>
+       <h3 class="box-title">Warnings</h3>
 
-            <div class="tab-content">
-              
+      
+     </div>
+     <div class="box-body">
+<!-- Table row -->
+        
+            <table class="table table-striped" >
+              <thead>
+              <tr>
+                <th width="80%">Content</th>
+                <th width="13%">Date</th>
+                <th >Action</th>
+              </tr>
+              </thead>
+              <tbody>
                 
-            <!--***********************************************************-->
-            <!--***************INICIO - Dados dos Utilizadores*************-->
-            <!--***********************************************************-->
-            
-                <div id="personalinformation" class="tab-pane fade">
-                <h3>Menu 1</h3>
-                <p>Some content in menu 1.</p>
-                </div>
-            
-             <!--***********************************************************-->
-            <!--***************FIM - Dados dos Utilizadores*************-->
-            <!--***********************************************************-->
-            
-             <!--***********************************************************-->
-            <!--***************INICIO - Estatísticas dos Utilizadores*************-->
-            <!--***********************************************************-->
-            
-                <div id="statistic" class="tab-pane fade in active">
-                <h3>Information</h3>
-                <p>Some content.</p>
-
-                <!-- Flot Charts based on user statistics -->
+               <tr >
                
-                  <div class="row">
-                    <div class="col-xs-12">
-                      <!-- interactive chart -->
-                      <div class="box box-primary">
-                        <div class="box-header with-border">
-                          <i class="fa fa-bar-chart-o"></i>
-
-                          <h3 class="box-title">Interactive Area Chart</h3>
-
-                          <div class="box-tools pull-right">
-                            Real time
-                            <div class="btn-group" id="realtime" data-toggle="btn-toggle">
-                              <button type="button" class="btn btn-default btn-xs active" data-toggle="on">On</button>
-                              <button type="button" class="btn btn-default btn-xs" data-toggle="off">Off</button>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="box-body">
-                          <div id="interactive" style="height: 300px;"></div>
-                        </div>
-                        <!-- /.box-body-->
-                      </div>
-                      <!-- /.box -->
-
-                    </div>
-                    <!-- /.col -->
-                  </div>
-                  <!-- /.row -->
-
-                  <div class="row">
-                    <div class="col-md-6">
-                      <!-- Line chart -->
-                      <div class="box box-primary">
-                        <div class="box-header with-border">
-                          <i class="fa fa-bar-chart-o"></i>
-
-                          <h3 class="box-title">Line Chart</h3>
-
-                          <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                          </div>
-                        </div>
-                        <div class="box-body">
-                          <div id="line-chart" style="height: 300px;"></div>
-                        </div>
-                        <!-- /.box-body-->
-                      </div>
-                      <!-- /.box -->
-
-                      <!-- Area chart -->
-                      <div class="box box-primary">
-                        <div class="box-header with-border">
-                          <i class="fa fa-bar-chart-o"></i>
-
-                          <h3 class="box-title">Full Width Area Chart</h3>
-
-                          <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                          </div>
-                        </div>
-                        <div class="box-body">
-                          <div id="area-chart" style="height: 338px;" class="full-width-chart"></div>
-                        </div>
-                        <!-- /.box-body-->
-                      </div>
-                      <!-- /.box -->
-
-                    </div>
-                    <!-- /.col -->
-
-                    <div class="col-md-6">
-                      <!-- Bar chart -->
-                      <div class="box box-primary">
-                        <div class="box-header with-border">
-                          <i class="fa fa-bar-chart-o"></i>
-
-                          <h3 class="box-title">Bar Chart</h3>
-
-                          <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                          </div>
-                        </div>
-                        <div class="box-body">
-                          <div id="bar-chart" style="height: 300px;"></div>
-                        </div>
-                        <!-- /.box-body-->
-                      </div>
-                      <!-- /.box -->
-
-                      <!-- Donut chart -->
-                      <div class="box box-primary">
-                        <div class="box-header with-border">
-                          <i class="fa fa-bar-chart-o"></i>
-
-                          <h3 class="box-title">Donut Chart</h3>
-
-                          <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                          </div>
-                        </div>
-                        <div class="box-body">
-                          <div id="donut-chart" style="height: 300px;"></div>
-                        </div>
-                        <!-- /.box-body-->
-                      </div>
-                      <!-- /.box -->
-                    </div>
-                    <!-- /.col -->
-                  </div>
-                  <!-- /.row -->
+                    <td width="80%" style="color:orange" > The user with the id 1 missed his objective of walking 1 hour  </td>
+                    <td width="13%">03/02/2017</td>
+                    <td style>{{Form::button('Send Message',['onClick'=>'#'])}}</td>
+              </tr>
+               <tr>
+               
+                    <td width="80%" style="color:red"> The user with the id 4 send an emergency notification at 18:07 01/02/2017 on location  long : -4.09224 lat: 31.029382.  <br> Click to see on the map.   </td>
+                    <td width="13%">03/02/2017</td>
+                    <td >{{Form::button('Send Message',['onClick'=>'#'])}}</td>
+              </tr>
              
-
-                </div>
-    <!-- /.content -->
-
-                <!--***********************************************************-->
-            <!--***************FIM - Estatísticas do Utilizador*************-->
-            <!--***********************************************************-->
-
-            <!--***********************************************************-->
-            <!--***************Inicio - Warning do Utilizador*************-->
-            <!--***********************************************************-->
-            <div id="warning" class="tab-pane fade">
-              <h3>Menu 2</h3>
-              <p>Some content in menu 2.</p>
-            </div>
-              <!--***********************************************************-->
-            <!--***************FIM - Warning do Utilizador*************-->
-            <!--***********************************************************-->
-
-              <!--***********************************************************-->
-            <!--***************Inicio - Histórico do Utilizador*************-->
-            <!--***********************************************************-->
-             <div id="history" class="tab-pane fade">
-              <h3>Menu 2</h3>
-              <p>Some content in menu 2.</p>
-            </div>
-             <!--***********************************************************-->
-            <!--***************FIM - Histórico do Utilizador*************-->
-            <!--***********************************************************-->
+              </tbody>
+            </table>
+          </div>
+          <!-- /.col -->
         </div>
-
-            
-        </div>
-       
-   
-       <!--********************************************************************************************************************************-->
-       <!--*************** FIM - Detalhes (dados, estatisticas - gráficos, avisos sobre os  Utilizadores)************************************-->
-       <!--********************************************************************************************************************************-->
-       
-   </div>
-   
     <br>
     <br>
     <br>
