@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
-
+use GuzzleHttp\Client;
+use Auth;
 class HomeController extends Controller
 {
     /**
@@ -28,7 +29,30 @@ class HomeController extends Controller
     }
      public function users()
     {
-        return view('admin.users');
+         
+
+
+
+        $userid=Auth::user()->id;
+        $client = new Client();
+        $response = $client->get('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid);
+
+
+        $code = $response->getStatusCode();
+        $message = $response->getBody();
+
+        $obj = json_decode($response->getBody());
+          // echo $obj->alldata->status->status;
+
+        if( $obj->alldata->status->status!=7)
+            {
+               $usersPatients=0;
+           }
+          else
+            {
+              $usersPatients= $obj->alldata->data->result;
+           }
+        return view('admin.users')->with('usersPatients', $usersPatients);
     }
     public function profile()
     {

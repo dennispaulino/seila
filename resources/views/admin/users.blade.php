@@ -17,27 +17,21 @@
        <!--***********************************************************-->
         <div class=" col-sm-5 col-lg-3"> 
             
-                       
-            <h3>Users </h3>
+                     
+            <h3 >Users  </h3>
             
             
                 <div id="list" >
+                    
                 <ul style="width: 200px; height: 400px; overflow-x: hidden;overflow-y: auto;" >
-                    <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-                <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-                <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-                <li> <a href="#" class="list-group-item">First item</a></li>
-                        <li><a href="#" class="list-group-item">Second item</a></li>
-               <li> <a href="#" class="list-group-item">Third item</a> </li>
-               
+              @foreach ( $usersPatients as $user)
+              <li> <a href="#" class="list-group-item">{{$user->idUserPatient}}</a></li>
+              @endforeach
+              
                    </ul> 
                 </div>
+                
+            {{Form::button('Add user',['onClick'=>'addUser()'])}}
             
             
         </div>
@@ -51,9 +45,9 @@
        <!--***************INICIO - Detalhes (dados, estatisticas - gráficos, avisos, histórico sobre os  Utilizadores)************************************-->
        <!--********************************************************************************************************************************-->
        
-       <div class="col-sm-7 col-lg-9">
+       <div id="userContent" class="col-sm-7 col-lg-9">
             
-           <h3> User : </h3>
+           <h3 id ="userIdH3"> User : </h3>
 
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#statistic">Statistics</a></li>
@@ -350,9 +344,10 @@
     <script> console.log('Hi!'); </script>
     <!-- jQuery 2.2.3 -->
 
+      
 <!-- Page script -->
 <script>
-  $(function () {
+  $(function() {
    
 
 
@@ -379,7 +374,7 @@
       data: cos,
       color: "#00c0ef"
     };
-    $.plot("#line-chart", [line_data1, line_data2], {
+  var $hello=  $.plot("#line-chart", [line_data1, line_data2], {
       grid: {
         hoverable: true,
         borderColor: "#f3f3f3",
@@ -400,7 +395,7 @@
         color: ["#3c8dbc", "#f56954"]
       },
       yaxis: {
-        show: true,
+        show: true
       },
       xaxis: {
         show: true
@@ -531,6 +526,12 @@
         + Math.round(series.percent) + "%</div>";
   }
 </script>
+<script>
+         function addUser(){
+                $('#userContent').toggle().toggle();
+    document.getElementById("userIdH3").innerHTML = "User : 5 + 6";        
+    }
+      </script>
 
 <!--
 ************************************************************

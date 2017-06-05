@@ -1,41 +1,10 @@
 @extends('adminlte::page')
 
 @section('title', 'AdminLTE')
-<!--
-//<?ph
-//use GuzzleHttp\Client;
-//
-//$userid=Auth::user()->id;
-//$client = new Client();
-//$response = $client->get('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid);
-////$response = $client->get('http://192.168.109.1/~nanostima/relationuser.php?'.$userid);
-// 
-//$code = $response->getStatusCode();
-//$message = $response->getBody();
-//
-//$obj = json_decode($response->getBody());
-//   echo $obj->alldata->status->status;
-//if( $obj->alldata->status->status!=7)
-//    { 
-//       echo "This user has no patient";
-//       $usersPatients=0;
-//   }
-//  else
-//    {
-//      
-//      
-//      $usersPatients= count($obj->alldata->data->result);
-////      foreach ($obj->alldata->data->result as $row)
-////          {
-////            print $row->idUserProfessional;
-////          }
-//   }
-//?>-->
-
 
           
             
-   
+
 
 
 @section('content_header')
@@ -43,14 +12,43 @@
 @stop
 
 @section('content')
+    
+
+<?php
+use GuzzleHttp\Client;
+
+$userid=Auth::user()->id;
+$client = new Client();
+$response = $client->get('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid);
+
  
+$code = $response->getStatusCode();
+$message = $response->getBody();
+
+$obj = json_decode($response->getBody());
+  // echo $obj->alldata->status->status;
+   
+if( $obj->alldata->status->status!=7)
+    { 
+       echo "This user has no patient";
+       $usersPatients=0;
+   }
+  else
+    {
+      
+      
+      $usersPatients= count($obj->alldata->data->result);
+      
+   }
+?>
+
+
    <div class="row">
         <div class="col-lg-4 col-xs-6">
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>  <?php $usersPatients=10;
-                      echo $usersPatients; ?> </h3>
+              <h3> <?php echo $usersPatients?>  </h3>
 
               <p>Users</p>
             </div>
@@ -114,7 +112,7 @@
                           <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                             </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                           
                           </div>
                         </div>
                         <div class="box-body">
@@ -136,7 +134,7 @@
                           <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                             </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            
                           </div>
                         </div>
                         <div class="box-body">
@@ -164,7 +162,7 @@
        <div class="box-tools pull-right">
          <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
          </button>
-         <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+         
        </div>
      </div>
      <div class="box-body">

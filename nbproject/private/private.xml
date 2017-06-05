@@ -5,8 +5,7 @@
         <group>
             <file>file:/C:/wamp64/www/nanostimaWebSite/nanostima/resources/views/admin/users.blade.php</file>
             <file>file:/C:/wamp64/www/nanostimaWebSite/nanostima/app/Http/routes.php</file>
-            <file>file:/C:/wamp64/www/nanostimaWebSite/nanostima/resources/views/admin/warnings.blade.php</file>
-            <file>file:/C:/wamp64/www/nanostimaWebSite/nanostima/resources/views/home.blade.php</file>
+            <file>file:/C:/wamp64/www/nanostimaWebSite/nanostima/app/Http/Controllers/Controller.php</file>
             <file>file:/C:/wamp64/www/nanostimaWebSite/nanostima/resources/views/admin/profile.blade.php</file>
         </group>
     </open-files>
