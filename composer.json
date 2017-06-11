@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "jeroennoten/laravel-adminlte": "^1.19",
         "guzzlehttp/guzzle": "^6.2",
-		 "laravelcollective/html": "5.2.*"
+		 "laravelcollective/html": "5.2.*",
+        "barryvdh/laravel-debugbar": "^2.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

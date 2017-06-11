@@ -9,7 +9,36 @@
 @stop
 
 @section('content')
-    
+      
+
+<!--                    //**************************************************************************************************************************************
+                    //**********inicialização das variáveis com a informAção daily record dos utilizadores associados ao professional logado***************************
+                    //**************************************************************************************************************************************
+-->
+  
+                   
+      
+                    
+
+
+<!--//<?ph
+        $array_o=array() ;
+
+        foreach ( $data['usersPatientsAllDailyRec'] as $user)
+                    {
+                        foreach ( $user as $dailyrec)
+                            { 
+                                $array_o []= $dailyrec;
+                            }
+                    }
+                   
+       ?>-->
+
+<!--                Debugbar::info($array_o)        -->
+                    
+                    {{ Debugbar::info($data['usersPatientsAllDailyRec'] )}}        
+                    
+    <div id="idUserPatientSelected"></div>
    <div class="row">
        
        <!--***********************************************************-->
@@ -23,11 +52,23 @@
             
                 <div id="list" >
                     
-                <ul style="width: 200px; height: 400px; overflow-x: hidden;overflow-y: auto;" >
-              @foreach ( $usersPatients as $user)
-              <li> <a href="#" class="list-group-item">{{$user->idUserPatient}}</a></li>
-              @endforeach
+                    <ul style="width: 200px; height: 400px; overflow-x: hidden;overflow-y: auto;" >
+                    @foreach ( $data['usersPatients'] as $user)
+                  
+                    
+                    <li>  
+                        <a id="statistics_{{$user->idUserPatient}}" title="Click on user list to change statistics information" class="list-group-item"
+                       
+                           href="#" onclick="statisticsUserSelected({{$user->idUserPatient}}) ;return false;">{{$user->idUserPatient}}</a>
+                    </li>
+                    
               
+                    
+                    
+                    @endforeach
+                    {{ Debugbar::info($data['usersPatients'])}}
+                    {{Debugbar::info($data['usersPatientsAllDailyRec'])}}
+
                    </ul> 
                 </div>
                 
@@ -48,6 +89,14 @@
        <div id="userContent" class="col-sm-7 col-lg-9">
             
            <h3 id ="userIdH3"> User : </h3>
+           <p id="one"></p>
+           <p id="two"></p>
+           <p id="three"></p>
+           <p id="four"></p>
+            <p id="five"></p>
+           <p id="six"></p>
+           <p id="seven"></p>
+
 
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#statistic">Statistics</a></li>
@@ -273,6 +322,9 @@
 <!-- ./wrapper -->
 
 
+
+
+
 @stop
 
 
@@ -344,11 +396,137 @@
     <script> console.log('Hi!'); </script>
     <!-- jQuery 2.2.3 -->
 
+    
       
 <!-- Page script -->
 <script>
-  $(function() {
+  
+
+
+  /*
+   * Custom Label formatter
+   * ----------------------
+   */
+  function labelFormatter(label, series) {
+    return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">'
+        + label
+        + "<br>"
+        + Math.round(series.percent) + "%</div>";
+  }
+
+
+         function addUser(){
+                document.getElementById("idUserPatientSelected").innerHTML =2;
+                $('#userContent').toggle().toggle();
+                         document.getElementById("userIdH3").innerHTML = "User : 5 + 6";     
+
+            statisticsUserSelected(2);
+    
+        }
+  
+  
+  
+  function statisticsUserSelected(idUser,jsonArrayDailyRec)
+  {
+      
+    
+      var idUserPatientSelected=idUser;
+      
+
+      
+   if(idUserPatientSelected!==0)
+   {
+        
    
+ document.getElementById("idUserPatientSelected").innerHTML =idUserPatientSelected;
+  document.getElementById("idUserPatientSelected").innerHTML ="Hello";
+  
+  /*
+   * 
+   *    *********************************
+            *
+            * *********************************
+            *  *********************************
+            *   **************
+            *      *********************************
+            *
+            * *********************************
+            *  *********************************
+            *   **************
+            *      *********************************
+            *
+            * *********************************
+            *  *********************************
+            *   **************
+            *   
+  
+  AQUI É QUE VOU "PUXAR" A INFORMAÇÃO DO ARRAY DATA[ALLDATAUSER] PASSADA NO CONTROLLER
+            DEPOIS VOU APRESENTAR ESSA INFORMAÇÃO DAS ESTATISTICAS
+            *********************************
+            *
+            * *********************************
+            *  *********************************
+            *   ********************************* ********************************* *********************************
+           
+           
+           
+  
+  */
+ 
+ 
+var js_array=<?php  echo json_encode($data['usersPatientsAllDailyRec']);?>;
+
+    for(var i=0;i<js_array[idUserPatientSelected].length;i++){
+        alert(js_array[idUserPatientSelected][i].date);
+    }
+       
+       
+       
+    /*
+     * BAR CHART
+     * ---------
+     */
+    
+    
+    
+    
+    //Present in the graph the 7 seven days before in the following format ("dd/mm")
+    var actualDay= returnDateBeforeDays(0);
+    var oneDayBefore = returnDateBeforeDays(1);
+    var twoDayBefore = returnDateBeforeDays(2);
+    var threeDayBefore = returnDateBeforeDays(3);
+    var fourDayBefore = returnDateBeforeDays(4);
+    var fiveDayBefore = returnDateBeforeDays(5);
+    var sixDayBefore = returnDateBeforeDays(6);
+    
+
+    var bar_data = {
+      data: [[sixDayBefore, 10], [fiveDayBefore, 8], [fourDayBefore, 4], [threeDayBefore, 13], [twoDayBefore, 17], [oneDayBefore, 9],[actualDay, 4]],
+      color: "#3c8dbc"
+    };
+    
+    
+  
+    $.plot("#bar-chart", [bar_data], {
+      grid: {
+        borderWidth: 1,
+        borderColor: "#f3f3f3",
+        tickColor: "#f3f3f3"
+      },
+      series: {
+        bars: {
+          show: true,
+          barWidth: 0.5,
+          align: "center"
+        }
+      },
+      xaxis: {
+        mode: "categories",
+        tickLength: 0
+      }
+    });
+    /* END BAR CHART */
+
 
 
     /*
@@ -452,35 +630,6 @@
     /* END AREA CHART */
 
     /*
-     * BAR CHART
-     * ---------
-     */
-
-    var bar_data = {
-      data: [["January", 10], ["February", 8], ["March", 4], ["April", 13], ["May", 17], ["June", 9]],
-      color: "#3c8dbc"
-    };
-    $.plot("#bar-chart", [bar_data], {
-      grid: {
-        borderWidth: 1,
-        borderColor: "#f3f3f3",
-        tickColor: "#f3f3f3"
-      },
-      series: {
-        bars: {
-          show: true,
-          barWidth: 0.5,
-          align: "center"
-        }
-      },
-      xaxis: {
-        mode: "categories",
-        tickLength: 0
-      }
-    });
-    /* END BAR CHART */
-
-    /*
      * DONUT CHART
      * -----------
      */
@@ -490,6 +639,9 @@
       {label: "Series3", data: 20, color: "#0073b7"},
       {label: "Series4", data: 50, color: "#00c0ef"}
     ];
+    
+    
+    
     $.plot("#donut-chart", donutData, {
       series: {
         pie: {
@@ -513,25 +665,33 @@
      * END DONUT CHART
      */
 
-  });
-
-  /*
-   * Custom Label formatter
-   * ----------------------
-   */
-  function labelFormatter(label, series) {
-    return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">'
-        + label
-        + "<br>"
-        + Math.round(series.percent) + "%</div>";
+   }
+    
+    
   }
-</script>
-<script>
-         function addUser(){
-                $('#userContent').toggle().toggle();
-    document.getElementById("userIdH3").innerHTML = "User : 5 + 6";        
-    }
-      </script>
+  
+  
+  
+  
+  
+              function returnDateBeforeDays( days){ 
+                var date = new Date();
+                var last = new Date(date.getTime() - (days * 1000 * 24 * 60 * 60 ));
+                var day =last.getDate();
+                var month=last.getMonth()+1;
+                if(day<10) {
+                   day='0'+day;
+               } 
+
+               if(month<10) {
+                   month='0'+month;
+               } 
+
+              var  finaldate = day+'/'+month;
+               return finaldate;
+             }
+              </script>
+      
 
 <!--
 ************************************************************
@@ -598,6 +758,9 @@
            });
 
 </script>
+
+
+
 <!--
 ************************************************************
 ******************************FIM************************

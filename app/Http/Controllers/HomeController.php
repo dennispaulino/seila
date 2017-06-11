@@ -6,6 +6,7 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Auth;
+use Debugbar;
 class HomeController extends Controller
 {
     /**
@@ -29,10 +30,6 @@ class HomeController extends Controller
     }
      public function users()
     {
-         
-
-
-
         $userid=Auth::user()->id;
         $client = new Client();
         $response = $client->get('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid);
@@ -51,8 +48,30 @@ class HomeController extends Controller
           else
             {
               $usersPatients= $obj->alldata->data->result;
+              $usersPatientsAllDailyRec = array();
+                       
+              foreach ($usersPatients as $userPatientDailyRec)
+              {
+                    $clientDailyRec = new Client();
+                    $responseDailyRec = $clientDailyRec->get('http://192.168.109.1/~nanostima/dailyrecord.php?idUser='.$userPatientDailyRec->idUserPatient);
+
+                    $codeDailyRec = $responseDailyRec->getStatusCode();
+                    $messageDailyRec = $responseDailyRec->getBody();
+                     
+                    $objDailyRec = json_decode($responseDailyRec->getBody());
+                    
+                    if( $objDailyRec->alldata->status->status==7)
+                        {
+                         
+                      $usersPatientsAllDailyRec[$userPatientDailyRec->idUserPatient]=$objDailyRec->alldata->data->result;
+                        
+         
+                        }
+              }
+                      
            }
-        return view('admin.users')->with('usersPatients', $usersPatients);
+        //return view('admin.users')->with('usersPatients', $usersPatients);
+         return view('admin.users')->with('data', ['usersPatients'=>$usersPatients, 'usersPatientsAllDailyRec' => $usersPatientsAllDailyRec]);
     }
     public function profile()
     {
