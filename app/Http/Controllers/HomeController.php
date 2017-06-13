@@ -30,26 +30,35 @@ class HomeController extends Controller
     }
      public function users()
     {
+         //id do utilizador autenticado
         $userid=Auth::user()->id;
+        
+        //pedido ao webservice para saber quais são os pacientes que o profissional logado tem (na bd -  relationuser)
         $client = new Client();
         $response = $client->get('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid);
 
 
-        $code = $response->getStatusCode();
-        $message = $response->getBody();
-
         $obj = json_decode($response->getBody());
-          // echo $obj->alldata->status->status;
+       
 
-        if( $obj->alldata->status->status!=7)
+        if( $obj->alldata->status->status!=7) //se não existir uma  relação entre o profissional de saúde e ALGUM paciente, então retorna 0 senão retorna um array com vários dados dos pacientes (DailyRec, WalkRec, Steps...) 
             {
                $usersPatients=0;
            }
           else
             {
+              
+              //resultados em json, com um array de relationuser (id de utilizadorProfissional e id de utilizadorPaciente)
               $usersPatients= $obj->alldata->data->result;
-              $usersPatientsAllDailyRec = array();
-                       
+              
+              
+              
+             //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS DAILYREC......
+              $usersPatientsAllDailyRec = array(); //array para armazenar os dailyrecords de cada paciente que o utilizador Profissional de Saúde logado tem
+              
+              
+              $usersPatientsAllStep= array();//array para armazenar os Steps de cada paciente que o utilizador Profissional de Saúde logado tem
+              
               foreach ($usersPatients as $userPatientDailyRec)
               {
                     $clientDailyRec = new Client();
@@ -64,14 +73,56 @@ class HomeController extends Controller
                         {
                          
                       $usersPatientsAllDailyRec[$userPatientDailyRec->idUserPatient]=$objDailyRec->alldata->data->result;
-                        
-         
+
+                      
+                    
+                         //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS STEP......
+                         //como cada registo STEP está relacionada com um registo DailyRecord, é armazenado no array multidimensional $usersPatientsAllStep o id do paciente e o id do respectivo dailyrecord. E.g. $usersPatientsAllStep[$userPatientDailyRec->idUserPatient][$usersPatientsStepsBasedOnDailyRec->idDailyRec]
+                         
+                         $usersPatientsAllStep[$userPatientDailyRec->idUserPatient]= array();
+                            foreach ($usersPatientsAllDailyRec[$userPatientDailyRec->idUserPatient] as $usersPatientsStepsBasedOnDailyRec)
+                            {    
+                                
+                                   
+                                  $clientStep= new Client();
+                                  $responseStep = $clientStep->get('http://192.168.109.1/~nanostima/step.php?idDailyRec='.$usersPatientsStepsBasedOnDailyRec->idDailyRec);
+                             
+                                  $objStep = json_decode($responseStep->getBody());
+
+                                  if( $objStep->alldata->status->status==7)
+                                      {
+                                    $usersPatientsAllStep[$userPatientDailyRec->idUserPatient][$usersPatientsStepsBasedOnDailyRec->idDailyRec]=$objStep->alldata->data->result;
+                                   
+                                 
+                                    
+                                        
+                            
+                                      }
+                            }
+                           
+                          
+                            //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS STEP......
+                         
                         }
+                        
+                        
+                       
+                           
+                          
               }
+              
+                 //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS DAILYREC......
                       
            }
-        //return view('admin.users')->with('usersPatients', $usersPatients);
-         return view('admin.users')->with('data', ['usersPatients'=>$usersPatients, 'usersPatientsAllDailyRec' => $usersPatientsAllDailyRec]);
+          
+           //limpa todos os elementos vazios e elementos-filhos vazios do array  $usersPatientsAllStep
+          $usersPatientsAllStep= array_filter(array_map('array_filter', $usersPatientsAllStep));
+           
+           Debugbar::info( "Todos os registos dos Steps dos pacientes associados ao profissional de saúde");  
+             Debugbar::info(  $usersPatientsAllStep);  
+             
+             
+         return view('admin.users')->with('data', ['usersPatients'=>$usersPatients, 'usersPatientsAllDailyRec' => $usersPatientsAllDailyRec, 'usersPatientsAllStep' => $usersPatientsAllStep]);
     }
     public function profile()
     {

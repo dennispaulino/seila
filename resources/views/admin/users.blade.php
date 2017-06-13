@@ -36,7 +36,8 @@
 
 <!--                Debugbar::info($array_o)        -->
                     
-                    {{ Debugbar::info($data['usersPatientsAllDailyRec'] )}}        
+                      
+                    {{Debugbar::info($data['usersPatientsAllDailyRec'])}}     
                     
     <div id="idUserPatientSelected"></div>
    <div class="row">
@@ -66,8 +67,7 @@
                     
                     
                     @endforeach
-                    {{ Debugbar::info($data['usersPatients'])}}
-                    {{Debugbar::info($data['usersPatientsAllDailyRec'])}}
+                
 
                    </ul> 
                 </div>
@@ -473,13 +473,8 @@
   
   */
  
- 
-var js_array=<?php  echo json_encode($data['usersPatientsAllDailyRec']);?>;
 
-    for(var i=0;i<js_array[idUserPatientSelected].length;i++){
-        alert(js_array[idUserPatientSelected][i].date);
-    }
-       
+       //alert(js_array[idUserPatientSelected][i].date);
        
        
     /*
@@ -488,20 +483,109 @@ var js_array=<?php  echo json_encode($data['usersPatientsAllDailyRec']);?>;
      */
     
     
+    var todayDate = new Date();
+        var todayYear = todayDate.getFullYear();
+     
     
-    
-    //Present in the graph the 7 seven days before in the following format ("dd/mm")
+    //Present in the graph the 7 seven days before in the following format ("dd/mm"), full format is ("dd/MM/yyyy)
     var actualDay= returnDateBeforeDays(0);
+    var actualDayFullFormat=returnDateBeforeDaysFormatYYYYMMDD(0);
     var oneDayBefore = returnDateBeforeDays(1);
+    var oneDayBeforeFullFormat=returnDateBeforeDaysFormatYYYYMMDD(1);
     var twoDayBefore = returnDateBeforeDays(2);
+    var twoDayBeforeFullFormat=returnDateBeforeDaysFormatYYYYMMDD(2);
     var threeDayBefore = returnDateBeforeDays(3);
+    var threeDayBeforeFullFormat=returnDateBeforeDaysFormatYYYYMMDD(3);
     var fourDayBefore = returnDateBeforeDays(4);
+    var fourDayBeforeFullFormat=returnDateBeforeDaysFormatYYYYMMDD(4);
     var fiveDayBefore = returnDateBeforeDays(5);
+    var fiveDayBeforeFullFormat=returnDateBeforeDaysFormatYYYYMMDD(5);
     var sixDayBefore = returnDateBeforeDays(6);
+    var sixDayBeforeFullFormat=returnDateBeforeDaysFormatYYYYMMDD(6);
     
+            
+            
+     var actualDayDistance = 0 ;
+    var oneDayBeforeDistance = 0 ;
+    var twoDayBeforeDistance  = 0 ;
+    var threeDayBeforeDistance =0 ;
+    var fourDayBeforeDistance  = 0 ;
+    var fiveDayBeforeDistance  = 0 ;
+    var sixDayBeforeDistance  = 0 ;
+    
+        
+var arrayDailyRec=<?php  echo json_encode($data['usersPatientsAllDailyRec']);?>;
+var arrayStep=<?php  echo json_encode($data['usersPatientsAllStep']);?>;
 
+    for(var i=0;i<arrayDailyRec[idUserPatientSelected].length;i++)
+    {
+ 
+        var idDailyRecAux=arrayDailyRec[idUserPatientSelected][i].idDailyRec;
+
+         if(arrayStep[idUserPatientSelected]!=null ) 
+         {
+              if(arrayStep[idUserPatientSelected][idDailyRecAux]!=null)
+                 {
+
+
+                       switch(arrayDailyRec[idUserPatientSelected][i].date) 
+                           {
+                        case actualDayFullFormat:
+                        for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
+                            {
+                            actualDayDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                            }
+                            break;
+                        case oneDayBeforeFullFormat:
+                         for(var j=0;j<arrayStep[idUserPatientSelected][idDailyRecAux].length;j++)
+                            {
+                            oneDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                            }
+
+                            break;
+                        case twoDayBeforeFullFormat:
+                        for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
+                            {
+                            twoDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                            }
+                            break;
+                        case threeDayBeforeFullFormat:
+                        for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
+                            {
+                            threeDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                            }
+                            break;
+                        case fourDayBeforeFullFormat:
+                        for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
+                            {
+                            fourDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                            }
+                            break;
+                        case fiveDayBeforeFullFormat:
+                        for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
+                            {
+                            fiveDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                            }
+                            break;
+                        case sixDayBeforeFullFormat:
+                        for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
+                            {
+                            sixDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                            }
+                            break;
+                        default:
+
+                          } 
+                  }
+
+
+
+
+                  
+        }
+    }
     var bar_data = {
-      data: [[sixDayBefore, 10], [fiveDayBefore, 8], [fourDayBefore, 4], [threeDayBefore, 13], [twoDayBefore, 17], [oneDayBefore, 9],[actualDay, 4]],
+      data: [[sixDayBefore, sixDayBeforeDistance], [fiveDayBefore, fiveDayBeforeDistance], [fourDayBefore, fourDayBeforeDistance], [threeDayBefore, threeDayBeforeDistance], [twoDayBefore, twoDayBeforeDistance], [oneDayBefore, oneDayBeforeDistance],[actualDay, actualDayDistance]],
       color: "#3c8dbc"
     };
     
@@ -526,6 +610,10 @@ var js_array=<?php  echo json_encode($data['usersPatientsAllDailyRec']);?>;
       }
     });
     /* END BAR CHART */
+
+
+
+
 
 
 
@@ -690,6 +778,41 @@ var js_array=<?php  echo json_encode($data['usersPatientsAllDailyRec']);?>;
               var  finaldate = day+'/'+month;
                return finaldate;
              }
+             
+             
+              function returnDateBeforeDaysFormatYYYYMMDD( days){ 
+                var date = new Date();
+                var last = new Date(date.getTime() - (days * 1000 * 24 * 60 * 60 ));
+                var day =last.getDate();
+                var month=last.getMonth()+1;
+                  var year=last.getFullYear();
+                if(day<10) {
+                   day='0'+day;
+               } 
+
+               if(month<10) {
+                   month='0'+month;
+               } 
+
+              var  finaldate = year+'-'+month+'-'+day;
+               return finaldate;
+             }
+             
+             
+             
+             function stringToDate(_date,_format,_delimiter)
+{
+            var formatLowerCase=_format.toLowerCase();
+            var formatItems=formatLowerCase.split(_delimiter);
+            var dateItems=_date.split(_delimiter);
+            var monthIndex=formatItems.indexOf("mm");
+            var dayIndex=formatItems.indexOf("dd");
+            var yearIndex=formatItems.indexOf("yyyy");
+            var month=parseInt(dateItems[monthIndex]);
+            month-=1;
+            var formatedDate = new Date(dateItems[yearIndex],month,dateItems[dayIndex]);
+            return formatedDate;
+}
               </script>
       
 
