@@ -281,18 +281,8 @@
                         <div class="list-group">
                              <input type="text" id="inputWalkRecordSearch" onkeyup="SearchInHistoryTab('inputWalkRecordSearch','walkrecUL')" placeholder="Search for walk records...">
                           <ul id="walkrecUL" class="historylist">
-                                
-                                  <li><a href="#">Adele</a></li>
-                                  <li><a href="#">Agnes</a></li>
-
+                               
                                   
-                                  <li><a href="#">Billy</a></li>
-                                  <li><a href="#">Bob</a></li>
-
-                             
-                                  <li><a href="#">Calvin</a></li>
-                                  <li><a href="#">Christina</a></li>
-                                  <li><a href="#">Cindy</a></li>
                                 </ul> 
                         </div>
                         
@@ -483,12 +473,38 @@
          
          if(idUserPatientSelected!==0)
          {
-
+            
+      
 
 
        document.getElementById("userIdH3").innerHTML ="User : "+ idUserPatientSelected;
         
     
+    
+    
+    
+    //HISTORY TAB -> É MELHOR POR NUMA FUNÇÃO À PARTE
+    
+         var arrayWalkRec=<?php  echo json_encode($data['usersPatientsAllWalkRec']);?>;
+        
+    alert(arrayWalkRec);
+         var ulHTMLCode="";
+
+ if(arrayWalkRec.hasOwnProperty(idUserPatientSelected))
+                {
+
+          for(var i=0;i<arrayWalkRec[idUserPatientSelected].length;i++)
+          {
+              ulHTMLCode += "<li> Date : " + arrayWalkRec[idUserPatientSelected][i].dateStart+"</li>";
+        }   
+                
+    
+        
+    
+    
+                }
+    
+     document.getElementById("walkrecUL").innerHTML =ulHTMLCode;
     
     
      
@@ -577,6 +593,9 @@
             var arrayDailyRec=<?php  echo json_encode($data['usersPatientsAllDailyRec']);?>;
             var arrayStep=<?php  echo json_encode($data['usersPatientsAllStep']);?>;
 
+                if(arrayDailyRec.hasOwnProperty(idUserPatientSelected))
+                {
+
           for(var i=0;i<arrayDailyRec[idUserPatientSelected].length;i++)
           {
 
@@ -644,6 +663,7 @@
 
               }
           }
+      }
           var bar_data = {
             data: [[sixDayBefore, sixDayBeforeDistance], [fiveDayBefore, fiveDayBeforeDistance], [fourDayBefore, fourDayBeforeDistance], [threeDayBefore, threeDayBeforeDistance], [twoDayBefore, twoDayBeforeDistance], [oneDayBefore, oneDayBeforeDistance],[actualDay, actualDayDistance]],
             color: "#3c8dbc"

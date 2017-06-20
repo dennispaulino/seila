@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use Illuminate\Http\Request;
+//use App\Http\Requests;
+//use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Auth;
 use Debugbar;
@@ -60,12 +60,15 @@ class HomeController extends Controller
               $usersPatientsAllStep= array();//array para armazenar os Steps de cada paciente que o utilizador Profissional de Saúde logado tem
                
               $usersPatientsEmail= array();
-              foreach ($usersPatients as $userPatientDailyRec)
+              
+                $usersPatientsAllWalkRec= array(); //array para armazenar os dailyrecords de cada paciente que o utilizador Profissional de Saúde logado tem
+                
+              foreach ($usersPatients as $userPatientRelationUserInfo)
               {
                   
-                  
+                  //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE O SEU EMAIL A PARTIR DO ID (CHAVE PRIMARIA) ......
                     $clientUser = new Client();
-                    $responseUser = $clientUser->get('http://192.168.109.1/~nanostima/user.php?id='.$userPatientDailyRec->idUserPatient);
+                    $responseUser = $clientUser->get('http://192.168.109.1/~nanostima/user.php?id='.$userPatientRelationUserInfo->idUserPatient);
 
                     $codeUser = $responseUser->getStatusCode();
                     $messageUser = $responseUser->getBody();
@@ -75,13 +78,13 @@ class HomeController extends Controller
                     if( $objUser->alldata->status->status==7)
                         {
                          
-                      $usersPatientsEmail[$userPatientDailyRec->idUserPatient]=$objUser->alldata->data->result[0]->email;
+                      $usersPatientsEmail[$userPatientRelationUserInfo->idUserPatient]=$objUser->alldata->data->result[0]->email;
 
                        }
-                  
+                     //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE O SEU EMAIL A PARTIR DO ID (CHAVE PRIMARIA) ......
                   
                     $clientDailyRec = new Client();
-                    $responseDailyRec = $clientDailyRec->get('http://192.168.109.1/~nanostima/dailyrecord.php?idUser='.$userPatientDailyRec->idUserPatient);
+                    $responseDailyRec = $clientDailyRec->get('http://192.168.109.1/~nanostima/dailyrecord.php?idUser='.$userPatientRelationUserInfo->idUserPatient);
 
                     $codeDailyRec = $responseDailyRec->getStatusCode();
                     $messageDailyRec = $responseDailyRec->getBody();
@@ -91,15 +94,15 @@ class HomeController extends Controller
                     if( $objDailyRec->alldata->status->status==7)
                         {
                          
-                      $usersPatientsAllDailyRec[$userPatientDailyRec->idUserPatient]=$objDailyRec->alldata->data->result;
+                      $usersPatientsAllDailyRec[$userPatientRelationUserInfo->idUserPatient]=$objDailyRec->alldata->data->result;
 
                       
                     
                          //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS STEP......
-                         //como cada registo STEP está relacionada com um registo DailyRecord, é armazenado no array multidimensional $usersPatientsAllStep o id do paciente e o id do respectivo dailyrecord. E.g. $usersPatientsAllStep[$userPatientDailyRec->idUserPatient][$usersPatientsStepsBasedOnDailyRec->idDailyRec]
+                         //como cada registo STEP está relacionada com um registo DailyRecord, é armazenado no array multidimensional $usersPatientsAllStep o id do paciente e o id do respectivo dailyrecord. E.g. $usersPatientsAllStep[$userPatientRelationUserInfo->idUserPatient][$usersPatientsStepsBasedOnDailyRec->idDailyRec]
                          
-                         $usersPatientsAllStep[$userPatientDailyRec->idUserPatient]= array();
-                            foreach ($usersPatientsAllDailyRec[$userPatientDailyRec->idUserPatient] as $usersPatientsStepsBasedOnDailyRec)
+                         $usersPatientsAllStep[$userPatientRelationUserInfo->idUserPatient]= array();
+                            foreach ($usersPatientsAllDailyRec[$userPatientRelationUserInfo->idUserPatient] as $usersPatientsStepsBasedOnDailyRec)
                             {    
                                 
                                    
@@ -110,7 +113,7 @@ class HomeController extends Controller
 
                                   if( $objStep->alldata->status->status==7)
                                       {
-                                    $usersPatientsAllStep[$userPatientDailyRec->idUserPatient][$usersPatientsStepsBasedOnDailyRec->idDailyRec]=$objStep->alldata->data->result;
+                                    $usersPatientsAllStep[$userPatientRelationUserInfo->idUserPatient][$usersPatientsStepsBasedOnDailyRec->idDailyRec]=$objStep->alldata->data->result;
                                    
                                  
                                     
@@ -125,12 +128,28 @@ class HomeController extends Controller
                         }
                         
                         
-                       
+                        //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS DAILYREC......
+                        
+                        
+                          //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS WALKREC......
                            
-                          
+                            $clientWalkRec = new Client();
+                    $responseWalkRec = $clientWalkRec->get('http://192.168.109.1/~nanostima/walkrecord.php?idUser='.$userPatientRelationUserInfo->idUserPatient);
+
+                    $codeWalkRec = $responseWalkRec->getStatusCode();
+                    $messageWalkRec = $responseWalkRec->getBody();
+                     
+                    $objWalkRec = json_decode($responseWalkRec->getBody());
+                    
+                    if( $objWalkRec->alldata->status->status==7)
+                        {
+                         
+                      $usersPatientsAllWalkRec[$userPatientRelationUserInfo->idUserPatient]=$objWalkRec->alldata->data->result;
+                        }
+                        //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS WALKREC......
+            
               }
               
-                 //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS DAILYREC......
                       
            }
           
@@ -139,9 +158,9 @@ class HomeController extends Controller
            
            Debugbar::info( "Todos os registos dos Steps dos pacientes associados ao profissional de saúde");  
              Debugbar::info(  $usersPatientsAllStep);  
+                          Debugbar::info(  $usersPatientsAllWalkRec);  
              
-             
-         return view('admin.users')->with('data', ['usersPatients'=>$usersPatients, 'usersPatientsAllDailyRec' => $usersPatientsAllDailyRec, 'usersPatientsAllStep' => $usersPatientsAllStep, 'usersPatientsEmail' => $usersPatientsEmail]);
+         return view('admin.users')->with('data', ['usersPatients'=>$usersPatients, 'usersPatientsAllDailyRec' => $usersPatientsAllDailyRec, 'usersPatientsAllStep' => $usersPatientsAllStep, 'usersPatientsEmail' => $usersPatientsEmail,'usersPatientsAllWalkRec' => $usersPatientsAllWalkRec]);
     }
     public function profile()
     {
