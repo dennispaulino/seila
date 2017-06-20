@@ -58,9 +58,28 @@ class HomeController extends Controller
               
               
               $usersPatientsAllStep= array();//array para armazenar os Steps de cada paciente que o utilizador Profissional de Saúde logado tem
-              
+               
+              $usersPatientsEmail= array();
               foreach ($usersPatients as $userPatientDailyRec)
               {
+                  
+                  
+                    $clientUser = new Client();
+                    $responseUser = $clientUser->get('http://192.168.109.1/~nanostima/user.php?id='.$userPatientDailyRec->idUserPatient);
+
+                    $codeUser = $responseUser->getStatusCode();
+                    $messageUser = $responseUser->getBody();
+                     
+                    $objUser = json_decode($responseUser->getBody());
+                    
+                    if( $objUser->alldata->status->status==7)
+                        {
+                         
+                      $usersPatientsEmail[$userPatientDailyRec->idUserPatient]=$objUser->alldata->data->result[0]->email;
+
+                       }
+                  
+                  
                     $clientDailyRec = new Client();
                     $responseDailyRec = $clientDailyRec->get('http://192.168.109.1/~nanostima/dailyrecord.php?idUser='.$userPatientDailyRec->idUserPatient);
 
@@ -122,7 +141,7 @@ class HomeController extends Controller
              Debugbar::info(  $usersPatientsAllStep);  
              
              
-         return view('admin.users')->with('data', ['usersPatients'=>$usersPatients, 'usersPatientsAllDailyRec' => $usersPatientsAllDailyRec, 'usersPatientsAllStep' => $usersPatientsAllStep]);
+         return view('admin.users')->with('data', ['usersPatients'=>$usersPatients, 'usersPatientsAllDailyRec' => $usersPatientsAllDailyRec, 'usersPatientsAllStep' => $usersPatientsAllStep, 'usersPatientsEmail' => $usersPatientsEmail]);
     }
     public function profile()
     {
@@ -131,5 +150,9 @@ class HomeController extends Controller
     public function warnings()
     {
         return view('admin.warnings');
+    }
+      public function quick()
+    {
+        return view('admin.quickstart');
     }
 }
