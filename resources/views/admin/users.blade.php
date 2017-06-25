@@ -485,29 +485,13 @@
     
     //HISTORY TAB -> É MELHOR POR NUMA FUNÇÃO À PARTE
     
-         var arrayWalkRec=<?php  echo json_encode($data['usersPatientsAllWalkRec']);?>;
-        
-    alert(arrayWalkRec);
-         var ulHTMLCode="";
-
- if(arrayWalkRec.hasOwnProperty(idUserPatientSelected))
-                {
-
-          for(var i=0;i<arrayWalkRec[idUserPatientSelected].length;i++)
-          {
-              ulHTMLCode += "<li> Date : " + arrayWalkRec[idUserPatientSelected][i].dateStart+"</li>";
-        }   
-                
-    
-        
-    
-    
-                }
-    
-     document.getElementById("walkrecUL").innerHTML =ulHTMLCode;
-    
-    
+        historyTabWalkRecords(idUserPatientSelected);
      
+     
+     
+     /*********************************************************************
+     ***************INICIO Calendário - Google Calendar Embbed*************
+     *********************************************************************/
         if(~email.indexOf('@gmail.com'))// verifica se o email que o utilizador possui pertence à google, senão pertencer não é possível utilizar o google calendar
         { 
          document.getElementById("calendar").innerHTML  ='<iframe src="https://calendar.google.com/calendar/embed?src='+email+'&ctz=Europe/Lisbon" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>';
@@ -516,6 +500,11 @@
         {
           document.getElementById("calendar").innerHTML  ="<h3>It is not possible to access this user 'Google Calendar' account, because this user doesn´t have an gmail account associated!</h3>";
           }
+          
+          
+          /*********************************************************************
+     ***************FIM Calendário - Google Calendar Embbed*************
+     *********************************************************************/
     
     /*
          * 
@@ -559,7 +548,54 @@
            */
 
 
-          var todayDate = new Date();
+        barChartLast7DistanceWalked(idUserPatientSelected);
+          /*
+           * DONUT CHART - Gráfico que mostra as tarefas cumpridas do utilizador
+           * -----------
+           */
+
+          var donutData = [
+            {label: "Accomplished", data: 30, color: "#00DD00"},
+            {label: "Not Done", data: 20, color: "#ffff4d"},
+            {label: "Failed", data: 50, color: "#FF4500"}
+          ];
+
+
+
+          $.plot("#donut-chart", donutData, {
+            series: {
+              pie: {
+                show: true,
+                radius: 1,
+                innerRadius: 0.5,
+                label: {
+                  show: true,
+                  radius: 2 / 3,
+                  formatter: labelFormatter,
+                  threshold: 0.1
+                }
+
+              }
+            },
+            legend: {
+              show: false
+            }
+          });
+          /*
+           * END DONUT CHART
+           */
+
+         }
+
+
+        }
+  
+
+
+
+         function barChartLast7DistanceWalked(idUserPatientSelected)
+         {/* INICIO barChartLast7DistanceWalked */
+           var todayDate = new Date();
               var todayYear = todayDate.getFullYear();
 
 
@@ -661,9 +697,9 @@
 
 
 
-              }
-          }
-      }
+                    }
+                }
+            }
           var bar_data = {
             data: [[sixDayBefore, sixDayBeforeDistance], [fiveDayBefore, fiveDayBeforeDistance], [fourDayBefore, fourDayBeforeDistance], [threeDayBefore, threeDayBeforeDistance], [twoDayBefore, twoDayBeforeDistance], [oneDayBefore, oneDayBeforeDistance],[actualDay, actualDayDistance]],
             color: "#3c8dbc"
@@ -694,54 +730,48 @@
               min:0
                }
           });
-          /* END BAR CHART */
+         
+    
+    
+    
+                /* FIM barChartLast7DistanceWalked */
 
 
-
-          /*
-           * DONUT CHART - Gráfico que mostra as tarefas cumpridas do utilizador
-           * -----------
-           */
-
-          var donutData = [
-            {label: "Accomplished", data: 30, color: "#00DD00"},
-            {label: "Not Done", data: 20, color: "#ffff4d"},
-            {label: "Failed", data: 50, color: "#FF4500"}
-          ];
-
-
-
-          $.plot("#donut-chart", donutData, {
-            series: {
-              pie: {
-                show: true,
-                radius: 1,
-                innerRadius: 0.5,
-                label: {
-                  show: true,
-                  radius: 2 / 3,
-                  formatter: labelFormatter,
-                  threshold: 0.1
-                }
-
-              }
-            },
-            legend: {
-              show: false
-            }
-          });
-          /*
-           * END DONUT CHART
-           */
-
+    
+             
          }
+         
+         
+         
+         
+         
+         function historyTabWalkRecords(idUserPatientSelected)
+         {
+              
+              var arrayWalkRec=<?php  echo json_encode($data['usersPatientsAllWalkRec']);?>;
+            var ulHTMLCode="";
 
+            if(arrayWalkRec.hasOwnProperty(idUserPatientSelected))
+               {
+                   for(var i=0;i<arrayWalkRec[idUserPatientSelected].length;i++)
+                     {
+                       ulHTMLCode += "<li> <a href='#'>Date Start: " + arrayWalkRec[idUserPatientSelected][i].dateStart+"  Date End: " + arrayWalkRec[idUserPatientSelected][i].dateEnd+"  Distance GPS: " + arrayWalkRec[idUserPatientSelected][i].distanceGPS+"</a></li>";
+                     }   
 
-        }
-  
+               }
 
+             document.getElementById("walkrecUL").innerHTML =ulHTMLCode;
 
-
+    
+     
+         }
+         
+         
+         
+         function historyTabDailyRecRecords()
+         {
+             //falta completar (parecido do historyTabWalkRecords())
+         }
 
             function returnDateBeforeDays( days){ 
               var date = new Date();
