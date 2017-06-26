@@ -185,7 +185,7 @@
                           <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                             </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                          
                           </div>
                         </div>
                         <div class="box-body">
@@ -280,7 +280,7 @@
                     <div id="walkrec" class="tab-pane fade">
                         <div class="list-group">
                              <input type="text" id="inputWalkRecordSearch" onkeyup="SearchInHistoryTab('inputWalkRecordSearch','walkrecUL')" placeholder="Search for walk records...">
-                          <ul id="walkrecUL" class="historylist">
+                                 <ul id="walkrecUL" class="historylist">
                                
                                   
                                 </ul> 
@@ -331,6 +331,9 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
+    
+    
+    
    <style type="text/css">
   #list ul {
   list-style-type: none;
@@ -412,7 +415,7 @@
     <!-- jQuery 2.2.3 -->
 <script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
-<script src="/bootstrap/js/bootstrap.min.js"></script>
+<!--<script src="/bootstrap/js/bootstrap.min.js"></script>-->
 <!-- FastClick -->
 <script src="/plugins/fastclick/fastclick.js"></script>
 <!-- AdminLTE App -->
@@ -748,14 +751,14 @@
          function historyTabWalkRecords(idUserPatientSelected)
          {
               
-              var arrayWalkRec=<?php  echo json_encode($data['usersPatientsAllWalkRec']);?>;
+            var arrayWalkRec=<?php  echo json_encode($data['usersPatientsAllWalkRec']);?>;
             var ulHTMLCode="";
 
             if(arrayWalkRec.hasOwnProperty(idUserPatientSelected))
                {
                    for(var i=0;i<arrayWalkRec[idUserPatientSelected].length;i++)
                      {
-                       ulHTMLCode += "<li> <a href='#'>Date Start: " + arrayWalkRec[idUserPatientSelected][i].dateStart+"  Date End: " + arrayWalkRec[idUserPatientSelected][i].dateEnd+"  Distance GPS: " + arrayWalkRec[idUserPatientSelected][i].distanceGPS+"</a></li>";
+                       ulHTMLCode += "<li> <a href='#historytabwalkrecid_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' onclick='toogleWalkRecPainLevelChart("+arrayWalkRec[idUserPatientSelected][i].idWalkRec+")' data-toggle='collapse'>Date Start: " + arrayWalkRec[idUserPatientSelected][i].dateStart+"  Date End: " + arrayWalkRec[idUserPatientSelected][i].dateEnd+"  Distance GPS: " + arrayWalkRec[idUserPatientSelected][i].distanceGPS+"</a><div id='historytabwalkrecid_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' class='collapse' ><div class='box box-primary'>                         <div class='box-header with-border'>                           <i class='fa fa-bar-chart-o'></i>                            <h3 class='box-title'>Pain Level chart</h3>                                            </div>                         <div class='box-body'>                           <div id='historytabwalkrecid2_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' style='height: 300px;'></div>                         </div>                                           </div></div></li>";
                      }   
 
                }
@@ -766,6 +769,17 @@
      
          }
          
+         function toogleWalkRecPainLevelChart(idWalkRec)
+         {
+             
+             
+             var d1 = [[1, 300], [2, 600], [3, 550], [4, 400], [5, 300]];
+
+                setTimeout(function(){
+                      $.plot("#historytabwalkrecid2_"+idWalkRec, [d1]);
+                }, 500);
+             
+         }
          
          
          function historyTabDailyRecRecords()
@@ -916,6 +930,8 @@
 ************************************************************-->
 
 <script>
+
+                              
 function SearchInHistoryTab(inputID,ulistID) {
     // Declare variables
     var input, filter, ul, li, a, i;
