@@ -40,8 +40,7 @@ class HomeController extends Controller
 
         $obj = json_decode($response->getBody());
        
-
-        if( $obj->alldata->status->status!=7) //se não existir uma  relação entre o profissional de saúde e ALGUM paciente, então retorna 0 senão retorna um array com vários dados dos pacientes (DailyRec, WalkRec, Steps...) 
+        if( $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid)== -1) //se não existir uma  relação entre o profissional de saúde e ALGUM paciente, então retorna 0 senão retorna um array com vários dados dos pacientes (DailyRec, WalkRec, Steps...) 
             {
                $usersPatients=0;
            }
@@ -49,52 +48,41 @@ class HomeController extends Controller
             {
               
               //resultados em json, com um array de relationuser (id de utilizadorProfissional e id de utilizadorPaciente)
-              $usersPatients= $obj->alldata->data->result;
-              
+              $usersPatients= $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid);
               
               
              //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS DAILYREC......
               $usersPatientsAllDailyRec = array(); //array para armazenar os dailyrecords de cada paciente que o utilizador Profissional de Saúde logado tem
               
-              
               $usersPatientsAllStep= array();//array para armazenar os Steps de cada paciente que o utilizador Profissional de Saúde logado tem
                
               $usersPatientsEmail= array();
               
-                $usersPatientsAllWalkRec= array(); //array para armazenar os dailyrecords de cada paciente que o utilizador Profissional de Saúde logado tem
+              $usersPatientsAllWalkRec= array(); //array para armazenar os dailyrecords de cada paciente que o utilizador Profissional de Saúde logado tem
                 
+              $usersPatientsAllPainLevelbasedOnWalkRec = array();
+              
+              $usersPatientsAllPausebasedOnWalkRec=array();
+                       
               foreach ($usersPatients as $userPatientRelationUserInfo)
               {
                   
                   //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE O SEU EMAIL A PARTIR DO ID (CHAVE PRIMARIA) ......
-                    $clientUser = new Client();
-                    $responseUser = $clientUser->get('http://192.168.109.1/~nanostima/user.php?id='.$userPatientRelationUserInfo->idUserPatient);
-
-                    $codeUser = $responseUser->getStatusCode();
-                    $messageUser = $responseUser->getBody();
-                     
-                    $objUser = json_decode($responseUser->getBody());
+                 
                     
-                    if( $objUser->alldata->status->status==7)
+                    if( $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/user.php?id='.$userPatientRelationUserInfo->idUserPatient)!=-1)
                         {
                          
-                      $usersPatientsEmail[$userPatientRelationUserInfo->idUserPatient]=$objUser->alldata->data->result[0]->email;
+                      $usersPatientsEmail[$userPatientRelationUserInfo->idUserPatient]=$this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/user.php?id='.$userPatientRelationUserInfo->idUserPatient)[0]->email;
 
                        }
                      //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE O SEU EMAIL A PARTIR DO ID (CHAVE PRIMARIA) ......
                   
-                    $clientDailyRec = new Client();
-                    $responseDailyRec = $clientDailyRec->get('http://192.168.109.1/~nanostima/dailyrecord.php?idUser='.$userPatientRelationUserInfo->idUserPatient);
-
-                    $codeDailyRec = $responseDailyRec->getStatusCode();
-                    $messageDailyRec = $responseDailyRec->getBody();
-                     
-                    $objDailyRec = json_decode($responseDailyRec->getBody());
-                    
-                    if( $objDailyRec->alldata->status->status==7)
+                
+                    if( $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/dailyrecord.php?idUser='.$userPatientRelationUserInfo->idUserPatient)!=-1)
                         {
                          
-                      $usersPatientsAllDailyRec[$userPatientRelationUserInfo->idUserPatient]=$objDailyRec->alldata->data->result;
+                      $usersPatientsAllDailyRec[$userPatientRelationUserInfo->idUserPatient]=$this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/dailyrecord.php?idUser='.$userPatientRelationUserInfo->idUserPatient);
 
                       
                     
@@ -102,53 +90,103 @@ class HomeController extends Controller
                          //como cada registo STEP está relacionada com um registo DailyRecord, é armazenado no array multidimensional $usersPatientsAllStep o id do paciente e o id do respectivo dailyrecord. E.g. $usersPatientsAllStep[$userPatientRelationUserInfo->idUserPatient][$usersPatientsStepsBasedOnDailyRec->idDailyRec]
                          
                          $usersPatientsAllStep[$userPatientRelationUserInfo->idUserPatient]= array();
-                            foreach ($usersPatientsAllDailyRec[$userPatientRelationUserInfo->idUserPatient] as $usersPatientsStepsBasedOnDailyRec)
-                            {    
-                                
-                                   
-                                  $clientStep= new Client();
-                                  $responseStep = $clientStep->get('http://192.168.109.1/~nanostima/step.php?idDailyRec='.$usersPatientsStepsBasedOnDailyRec->idDailyRec);
-                             
-                                  $objStep = json_decode($responseStep->getBody());
-
-                                  if( $objStep->alldata->status->status==7)
-                                      {
-                                    $usersPatientsAllStep[$userPatientRelationUserInfo->idUserPatient][$usersPatientsStepsBasedOnDailyRec->idDailyRec]=$objStep->alldata->data->result;
-                                   
-                                 
-                                    
-                                        
-                            
-                                      }
-                            }
-                           
-                          
-                            //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS STEP......
                          
+                          if( $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/step.php?idUser='.$userPatientRelationUserInfo->idUserPatient.'&lastDays=10000')!=-1)
+                                             {
+                                                    $auxStepArray=array();
+                                                    $auxStepArray = $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/step.php?idUser='.$userPatientRelationUserInfo->idUserPatient.'&lastDays=10000');
+                                                    foreach ( $auxStepArray as $stepRecord)
+                                                    {
+                                                    $usersPatientsAllStep[$userPatientRelationUserInfo->idUserPatient][$stepRecord->idDailyRec][]=$stepRecord;
+
+                                                    }
+                                             }
+                         
+                           //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS STEP......
+                         
+                            
+                         
+                         
+                            
+                            
                         }
+                       //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS DAILYREC......
                         
-                        
-                        //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS DAILYREC......
                         
                         
                           //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS WALKREC......
                            
-                            $clientWalkRec = new Client();
-                    $responseWalkRec = $clientWalkRec->get('http://192.168.109.1/~nanostima/walkrecord.php?idUser='.$userPatientRelationUserInfo->idUserPatient);
+             
+                        if($this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/walkrecord.php?idUser='.$userPatientRelationUserInfo->idUserPatient)!=-1)
+                            {
 
-                    $codeWalkRec = $responseWalkRec->getStatusCode();
-                    $messageWalkRec = $responseWalkRec->getBody();
-                     
-                    $objWalkRec = json_decode($responseWalkRec->getBody());
-                    
-                    if( $objWalkRec->alldata->status->status==7)
-                        {
+                            
+                          $usersPatientsAllWalkRec[$userPatientRelationUserInfo->idUserPatient]= $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/walkrecord.php?idUser='.$userPatientRelationUserInfo->idUserPatient);
+                            
+                          
+                          
+                          
+                          
+                           
+                         //como cada registo PainLevel está relacionada com um registo DailyRecord, mas é necessário ir buscar os registo Pain Level consoante as datas dateSTart e dateEnd das caminhadas (WalkRecord), é armazenado no array multidimensional $usersPatientsAllPainLevel, o id do paciente e o id do  walkrecord. E.g. $usersPatientsAllPainLevel[$userPatientRelationUserInfo->idUserPatient][$usersPatientsPainLevelBasedOnWalkRec->idDailyRec]
+
+                             $usersPatientsAllPainLevelbasedOnWalkRec[$userPatientRelationUserInfo->idUserPatient]= array();
+                             $usersPatientsAllPausebasedOnWalkRec[$userPatientRelationUserInfo->idUserPatient]= array();
+                                 $usersPatientsAllStepbasedOnWalkRec[$userPatientRelationUserInfo->idUserPatient]= array();
+
+                                 
+                                 
+                                    //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS PainLevel......       
+                                         if( $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/painstate.php?idUser='.$userPatientRelationUserInfo->idUserPatient)!=-1)
+                                             {
+                                                    $auxPainLevelArray=array();
+                                                    $auxPainLevelArray = $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/painstate.php?idUser='.$userPatientRelationUserInfo->idUserPatient);
+                                                    foreach ( $auxPainLevelArray as $painLevelRecord)
+                                                    {
+                                                    $usersPatientsAllPainLevelbasedOnWalkRec[$userPatientRelationUserInfo->idUserPatient][$painLevelRecord->idWalkRec][]=$painLevelRecord;
+
+                                                    }
+                                             }
+                                              //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS PainLevel......
+                                             
+                                             
+                                             
+                                              //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS Pause......  
+                                               if( $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/pause.php?idUser='.$userPatientRelationUserInfo->idUserPatient)!=-1)
+                                             {
+                                                    $auxPauseArray=array();
+                                                    $auxPauseArray = $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/pause.php?idUser='.$userPatientRelationUserInfo->idUserPatient);
+                                                    foreach ( $auxPauseArray as $pauseRecord)
+                                                    {
+                                                    $usersPatientsAllPausebasedOnWalkRec[$userPatientRelationUserInfo->idUserPatient][$pauseRecord->idWalkRecord][]=$pauseRecord;
+
+                                                    }
+                                             }
+                                               //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS Pause......
+                                          
+                                             $usersPatientsAllStepbasedOnWalkRec[$userPatientRelationUserInfo->idUserPatient]= array();
                          
-                      $usersPatientsAllWalkRec[$userPatientRelationUserInfo->idUserPatient]=$objWalkRec->alldata->data->result;
-                        }
+                                             
+                                             
+                                             //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS STEP baseados nas caminhadas "Walk REC"......
+                                              if( $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/step.php?idUser='.$userPatientRelationUserInfo->idUserPatient.'&idDailyRec=allwalkrecbyiduser')!=-1)
+                                             {
+                                                    $auxStepWalkRecArray=array();
+                                                    $auxStepWalkRecArray = $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/step.php?idUser='.$userPatientRelationUserInfo->idUserPatient.'&idDailyRec=allwalkrecbyiduser');
+                                                    foreach ( $auxStepWalkRecArray as $stepWalkRecord)
+                                                    {
+                                                    $usersPatientsAllStepbasedOnWalkRec[$userPatientRelationUserInfo->idUserPatient][$stepWalkRecord->idWalkRec][]=$stepWalkRecord;
+
+                                                    }
+                                             }
+                                             //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS STEP baseados nas caminhadas "Walk REC"......
+                          
+                            }
+                        
                         //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE OS REGISTOS WALKREC......
+             
             
-              }
+                        }
               
                       
            }
@@ -157,10 +195,13 @@ class HomeController extends Controller
           $usersPatientsAllStep= array_filter(array_map('array_filter', $usersPatientsAllStep));
            
            Debugbar::info( "Todos os registos dos Steps dos pacientes associados ao profissional de saúde");  
-             Debugbar::info(  $usersPatientsAllStep);  
-                          Debugbar::info(  $usersPatientsAllWalkRec);  
+            Debugbar::info(  $usersPatientsAllStep);  
+            Debugbar::info(  $usersPatientsAllPainLevelbasedOnWalkRec);  
+            Debugbar::info(  $usersPatientsAllPausebasedOnWalkRec);      
+            Debugbar::info(  $usersPatientsAllWalkRec); 
+                        
              
-         return view('admin.users')->with('data', ['usersPatients'=>$usersPatients, 'usersPatientsAllDailyRec' => $usersPatientsAllDailyRec, 'usersPatientsAllStep' => $usersPatientsAllStep, 'usersPatientsEmail' => $usersPatientsEmail,'usersPatientsAllWalkRec' => $usersPatientsAllWalkRec]);
+         return view('admin.users')->with('data', ['usersPatients'=>$usersPatients, 'usersPatientsAllDailyRec' => $usersPatientsAllDailyRec, 'usersPatientsAllStep' => $usersPatientsAllStep, 'usersPatientsEmail' => $usersPatientsEmail,'usersPatientsAllWalkRec' => $usersPatientsAllWalkRec,'usersPatientsAllPainLevelbasedOnWalkRec' => $usersPatientsAllPainLevelbasedOnWalkRec,'usersPatientsAllPausebasedOnWalkRec' => $usersPatientsAllPausebasedOnWalkRec,'usersPatientsAllStepbasedOnWalkRec' => $usersPatientsAllStepbasedOnWalkRec]);
     }
     public function profile()
     {
@@ -174,4 +215,27 @@ class HomeController extends Controller
     {
         return view('admin.quickstart');
     }
+
+    
+    
+     function callNanoSTIMAWebserviceGET($url)
+    {  // in this function it is called the webservice by the $url parameters, that must include the parameters if needed for the GET Request
+        // If the response returned in JSON of alldata->status->status is equal to 7 (success) then it return the obtained values, else returns -1
+        
+        $client= new Client();
+        $response = $client->get($url);
+
+        $obj = json_decode($response->getBody());
+
+        if( $obj->alldata->status->status==7)
+            {
+            return $obj->alldata->data->result;
+            }
+        else
+            {
+            return -1;
+            }
+    
+    }
+
 }

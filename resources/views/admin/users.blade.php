@@ -55,7 +55,8 @@
                     
 
                     <ul style="width: 200px; height: 400px; overflow-x: hidden;overflow-y: auto;" >
-                    @foreach ( $data['usersPatients'] as $user)
+                   @if(count($data['usersPatients'])!=0)
+                        @foreach ( $data['usersPatients'] as $user)
                   
                     
                     <li>  
@@ -66,11 +67,12 @@
                    ?>
                     </li>
                     
-              
+                   
                    
                     
                     @endforeach
-                
+                 @endif
+              
 
                    </ul> 
                 </div>
@@ -260,17 +262,7 @@
 
                                 <ul id="dailyrecUL" class="historylist">
                                
-                                  <li><a href="#">Adele</a></li>
-                                  <li><a href="#">Agnes</a></li>
-
-                               
-                                  <li><a href="#">Billy</a></li>
-                                  <li><a href="#">Bob</a></li>
-
-                               
-                                  <li><a href="#">Calvin</a></li>
-                                  <li><a href="#">Christina</a></li>
-                                  <li><a href="#">Cindy</a></li>
+                                 
                                 </ul> 
                        
                         </div>
@@ -430,7 +422,7 @@
 <script src="/plugins/flot/jquery.flot.pie.min.js"></script>
 <!-- FLOT CATEGORIES PLUGIN - Used to draw bar charts -->
 <script src="/plugins/flot/jquery.flot.categories.min.js"></script>
-
+<script src="/plugins/flot/jquery.flot.time.js"></script>
 <script src='/lib-full_calendar/moment.min.js'></script>
 <script src='/lib-full_calendar/gcal.js'></script>
 <script src='/dist/js/fullcalendar.min.js'></script>
@@ -486,10 +478,14 @@
     
     
     
-    //HISTORY TAB -> É MELHOR POR NUMA FUNÇÃO À PARTE
+        //HISTORY TAB  - WalkRecords
     
         historyTabWalkRecords(idUserPatientSelected);
      
+     
+         //HISTORY TAB  - DailyRecords
+    
+        historyTabDailyRecords(idUserPatientSelected);
      
      
      /*********************************************************************
@@ -752,15 +748,30 @@
          {
               
             var arrayWalkRec=<?php  echo json_encode($data['usersPatientsAllWalkRec']);?>;
+             var arrayStepWalkRec=<?php  echo json_encode($data['usersPatientsAllStepbasedOnWalkRec']);?>;
             var ulHTMLCode="";
-
+            
+         
             if(arrayWalkRec.hasOwnProperty(idUserPatientSelected))
                {
                    for(var i=0;i<arrayWalkRec[idUserPatientSelected].length;i++)
                      {
-                       ulHTMLCode += "<li> <a href='#historytabwalkrecid_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' onclick='toogleWalkRecPainLevelChart("+arrayWalkRec[idUserPatientSelected][i].idWalkRec+")' data-toggle='collapse'>Date Start: " + arrayWalkRec[idUserPatientSelected][i].dateStart+"  Date End: " + arrayWalkRec[idUserPatientSelected][i].dateEnd+"  Distance GPS: " + arrayWalkRec[idUserPatientSelected][i].distanceGPS+"</a><div id='historytabwalkrecid_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' class='collapse' ><div class='box box-primary'>                         <div class='box-header with-border'>                           <i class='fa fa-bar-chart-o'></i>                            <h3 class='box-title'>Pain Level chart</h3>                                            </div>                         <div class='box-body'>                           <div id='historytabwalkrecid2_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' style='height: 300px;'></div>                         </div>                                           </div></div></li>";
-                     }   
+                             
+                        var countStep=0;
+                        if(arrayStepWalkRec[idUserPatientSelected].hasOwnProperty(arrayWalkRec[idUserPatientSelected][i].idWalkRec))
+                          {        
+                            for(var j=0;j<arrayStepWalkRec[idUserPatientSelected][arrayWalkRec[idUserPatientSelected][i].idWalkRec].length;j++)
+                            {
 
+                                countStep+= parseFloat(arrayStepWalkRec[idUserPatientSelected][arrayWalkRec[idUserPatientSelected][i].idWalkRec][j].distance);
+                            }
+                          }
+                             
+                        countStep=round(countStep,1);
+                       ulHTMLCode += "<li> <a href='#historytabwalkrecid_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' onclick='toogleWalkRecPainLevelChart("+idUserPatientSelected+","+i+")' data-toggle='collapse'>Date Start: " + arrayWalkRec[idUserPatientSelected][i].dateStart+"  Date End: " + arrayWalkRec[idUserPatientSelected][i].dateEnd+"  Distance GPS (meters): " + arrayWalkRec[idUserPatientSelected][i].distanceGPS+"  Distance Step (meters): " + countStep+"</a><div id='historytabwalkrecid_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' class='collapse' ><div class='box box-primary'>                         <div class='box-header with-border'>                           <i class='fa fa-bar-chart-o'></i>                            <h3 class='box-title'>Pain Level chart</h3>                                            </div>                         <div class='box-body'>                           <div id='historytabwalkrecid2_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' style='height: 300px;'></div>                         </div>                                           </div></div></li>";
+                     }  
+                     
+               
                }
 
              document.getElementById("walkrecUL").innerHTML =ulHTMLCode;
@@ -769,22 +780,83 @@
      
          }
          
-         function toogleWalkRecPainLevelChart(idWalkRec)
+         function toogleWalkRecPainLevelChart(idUser,idWalkRecArrayIndex)
          {
+            
+             var arrayWalkRec=<?php  echo json_encode($data['usersPatientsAllWalkRec']);?>;
+            
+            
              
-             
-             var d1 = [[1, 300], [2, 600], [3, 550], [4, 400], [5, 300]];
+             var arrayPainLevelbasedOnWalkRec=<?php  echo json_encode($data['usersPatientsAllPainLevelbasedOnWalkRec']);?>;
+            var arrayPainLevelChart=[];
 
+
+
+            if(arrayPainLevelbasedOnWalkRec[idUser].hasOwnProperty(arrayWalkRec[idUser][idWalkRecArrayIndex].idWalkRec))
+                       {
+                  
+                   for(var i=0;i<arrayPainLevelbasedOnWalkRec[idUser][arrayWalkRec[idUser][idWalkRecArrayIndex].idWalkRec].length;i++)
+                     {
+                        
+                        arrayPainLevelChart.push([(new Date(arrayPainLevelbasedOnWalkRec[idUser][arrayWalkRec[idUser][idWalkRecArrayIndex].idWalkRec][i].dateStart)).getTime(), arrayPainLevelbasedOnWalkRec[idUser][arrayWalkRec[idUser][idWalkRecArrayIndex].idWalkRec][i].painState]);
+
+                         }
+    
+                 }
+                 
+  
+           
+   
                 setTimeout(function(){
-                      $.plot("#historytabwalkrecid2_"+idWalkRec, [d1]);
+                      $.plot("#historytabwalkrecid2_"+arrayWalkRec[idUser][idWalkRecArrayIndex].idWalkRec, [arrayPainLevelChart],{
+                                    yaxis: {
+                                        min:1
+                                    },
+                                    xaxis: {  mode: "time",
+                                         timezone: "browser",
+                                        min: (new Date(arrayWalkRec[idUser][idWalkRecArrayIndex].dateStart)).getTime(),
+                                            max: (new Date(arrayWalkRec[idUser][idWalkRecArrayIndex].dateEnd)).getTime()
+                                  
+                                                 },
+                                    "lines": {"show": "true"},
+                                    "points": {"show": "true"},
+                                    clickable:true,hoverable: true
+                            });
                 }, 500);
              
-         }
+                    }
          
          
-         function historyTabDailyRecRecords()
+         function historyTabDailyRecords(idUserPatientSelected)
          {
-             //falta completar (parecido do historyTabWalkRecords())
+              var arrayDailyRec=<?php  echo json_encode($data['usersPatientsAllDailyRec']);?>;
+               var arrayStep=<?php  echo json_encode($data['usersPatientsAllStep']);?>;
+            var ulHTMLCode="";
+               
+            if(arrayDailyRec.hasOwnProperty(idUserPatientSelected))
+               {
+                   for(var i=0;i<arrayDailyRec[idUserPatientSelected].length;i++)
+                     {
+                      var countStep=0;
+                        if(arrayStep[idUserPatientSelected].hasOwnProperty(arrayDailyRec[idUserPatientSelected][i].idDailyRec))
+                          {        
+                            for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
+                            {
+
+                                countStep+= parseFloat(arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance);
+                            }
+                          }
+                          countStep=round(countStep,1);
+                         ulHTMLCode += "<li> <a href='#historytabdailyrecid_"+arrayDailyRec[idUserPatientSelected][i].idDailyRec+"'>Date Start: " + arrayDailyRec[idUserPatientSelected][i].date+"  Distance GPS (meters): " + round(arrayDailyRec[idUserPatientSelected][i].distanceGPS,1)+"  Distance from steps (meters): " + countStep+"</a><div id='historytabwalkrecid_"+arrayDailyRec[idUserPatientSelected][i].idDailyRec+"' class='collapse' ><div class='box box-primary'>                         <div class='box-header with-border'>                           <i class='fa fa-bar-chart-o'></i>                            <h3 class='box-title'>Pain Level chart</h3>                                            </div>                         <div class='box-body'>                           <div id='historytabdailyrecid2_"+arrayDailyRec[idUserPatientSelected][i].idDailyRec+"' style='height: 300px;'></div>                         </div>                                           </div></div></li>";
+                       }  
+                     
+                     
+
+               }
+
+             document.getElementById("dailyrecUL").innerHTML =ulHTMLCode;
+
+    
          }
 
             function returnDateBeforeDays( days){ 
@@ -838,6 +910,11 @@
           var formatedDate = new Date(dateItems[yearIndex],month,dateItems[dayIndex]);
           return formatedDate;
         }
+        function round(value, precision)
+        {
+        var multiplier = Math.pow(10, precision || 0);
+        return Math.round(value * multiplier) / multiplier;
+        }       
               </script>
       
 
