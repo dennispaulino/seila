@@ -63,20 +63,28 @@ class HomeController extends Controller
               $usersPatientsAllPainLevelbasedOnWalkRec = array();
               
               $usersPatientsAllPausebasedOnWalkRec=array();
+              
+              
+              //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE O SEU EMAIL A PARTIR DO ID (CHAVE PRIMARIA) ......
+                 
+                    
+                    if($this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/user.php')!=-1)
+                        {
+                         
+                            $auxUserArray=array();
+                            $auxUserArray = $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/user.php');
+                            foreach ( $auxUserArray as $userRecord)
+                            {
+                                 $usersPatientsEmail[$userRecord->id]=$userRecord->email;
+                            }
+                      }
+                     //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE O SEU EMAIL A PARTIR DO ID (CHAVE PRIMARIA) ......
+                  
+              
                        
               foreach ($usersPatients as $userPatientRelationUserInfo)
               {
                   
-                  //......INICIO CÓDIGO PARA IR BUSCAR A CADA PACIENTE O SEU EMAIL A PARTIR DO ID (CHAVE PRIMARIA) ......
-                 
-                    
-                    if( $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/user.php?id='.$userPatientRelationUserInfo->idUserPatient)!=-1)
-                        {
-                         
-                      $usersPatientsEmail[$userPatientRelationUserInfo->idUserPatient]=$this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/user.php?id='.$userPatientRelationUserInfo->idUserPatient)[0]->email;
-
-                       }
-                     //......FIM CÓDIGO PARA IR BUSCAR A CADA PACIENTE O SEU EMAIL A PARTIR DO ID (CHAVE PRIMARIA) ......
                   
                 
                     if( $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/dailyrecord.php?idUser='.$userPatientRelationUserInfo->idUserPatient)!=-1)
@@ -199,6 +207,7 @@ class HomeController extends Controller
             Debugbar::info(  $usersPatientsAllPainLevelbasedOnWalkRec);  
             Debugbar::info(  $usersPatientsAllPausebasedOnWalkRec);      
             Debugbar::info(  $usersPatientsAllWalkRec); 
+            Debugbar::info(  $usersPatientsEmail); 
                         
              
          return view('admin.users')->with('data', ['usersPatients'=>$usersPatients, 'usersPatientsAllDailyRec' => $usersPatientsAllDailyRec, 'usersPatientsAllStep' => $usersPatientsAllStep, 'usersPatientsEmail' => $usersPatientsEmail,'usersPatientsAllWalkRec' => $usersPatientsAllWalkRec,'usersPatientsAllPainLevelbasedOnWalkRec' => $usersPatientsAllPainLevelbasedOnWalkRec,'usersPatientsAllPausebasedOnWalkRec' => $usersPatientsAllPausebasedOnWalkRec,'usersPatientsAllStepbasedOnWalkRec' => $usersPatientsAllStepbasedOnWalkRec]);

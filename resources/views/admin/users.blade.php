@@ -8,6 +8,92 @@
     <h1>NanoSTIMA - BackOffice</h1>
 @stop
 
+
+@section('css')
+    <link rel="stylesheet" href="/css/admin_custom.css">
+    
+      
+   <style type="text/css">
+  #list ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+ 
+ #list li {
+  font: 200 15px/1.5 Helvetica, Verdana, sans-serif;
+  border-bottom: 1px solid #ccc;
+}
+ 
+ #list li:last-child {
+  border: none;
+}
+ 
+ #list li a {
+  text-decoration: none;
+  color: #000;
+  display: block;
+  width: 200px;
+ 
+  -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -o-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
+  transition: font-size 0.3s ease, background-color 0.3s ease;
+}
+ 
+ #list li a:hover {
+  font-size: 30px;
+  background: #f6f6f6;
+}
+
+#myInput {
+    background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+    background-position: 10px 12px; /* Position the search icon */
+    background-repeat: no-repeat; /* Do not repeat the icon image */
+    width: 100%; /* Full-width */
+    font-size: 16px; /* Increase font-size */
+    padding: 12px 20px 12px 40px; /* Add some padding */
+    border: 1px solid #ddd; /* Add a grey border */
+    margin-bottom: 12px; /* Add some space below the input */
+}
+
+.historylist {
+    /* Remove default list styling */
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.historylist  li a {
+    border: 1px solid #ddd; /* Add a border to all links */
+    margin-top: -1px; /* Prevent double borders */
+    background-color: #f6f6f6; /* Grey background color */
+    padding: 12px; /* Add some padding */
+    text-decoration: none; /* Remove default text underline */
+    font-size: 18px; /* Increase the font-size */
+    color: black; /* Add a black text color */
+    display: block; /* Make it into a block element to fill the whole list */
+}
+
+.historylist  li a.header {
+    background-color: #e2e2e2; /* Add a darker background color for headers */
+    cursor: default; /* Change cursor style */
+}
+
+.historylist  li a:hover:not(.header) {
+    background-color: #eee; /* Add a hover effect to all links, except for headers */
+}
+ul.ui-autocomplete {
+    z-index: 1100;
+}
+    </style>
+    
+<link rel='stylesheet' href='/fullcalendar.css' />
+<link rel='stylesheet' href="/plugins/jQueryUI/jquery-ui.min.css" />
+@stop
+
+
 @section('content')
       
 
@@ -76,9 +162,31 @@
 
                    </ul> 
                 </div>
-                
-            {{Form::button('Add user',['onClick'=>'addUser()'])}}
+          
             
+               <!--***********************************************************-->
+       <!--***************INICIO - Botão e formulário para adicionar Utilizadores*************-->
+       <!--***********************************************************-->
+       
+           
+            <div id="dialog-form" title="Search">
+                <div class="ui-widget">
+                    <label for="emails_AddUser" >Emails : </label>
+                    <input id="emails_AddUser" />
+                </div>
+            </div>
+                
+            {{Form::button('Add user',['onClick'=>'addUser()','id'=>'open-search','class'=>'btn btn-primary'])}}
+            <div id="resultSearchUser">
+                
+            </div>
+            
+         
+            
+               <!--***********************************************************-->
+       <!--***************FIM - Botão e formulário para adicionar Utilizadores*************-->
+       <!--***********************************************************-->
+       
             
         </div>
        <!--***********************************************************-->
@@ -237,9 +345,56 @@
             <!--***************Inicio - Warning do Utilizador*************-->
             <!--***********************************************************-->
             <div id="warning" class="tab-pane fade">
-              <h3>Menu 2</h3>
-              <p>Some content in menu 2.</p>
+                <h3>Latests Warnings</h3>
+
+                <div class="box box-primary">
+                     <div class="box-header with-border">
+
+                              <i class="ion ion-alert-circled"></i>
+
+
+
+                       <h3 class="box-title">Warnings</h3>
+
+
+                     </div>
+                     <div class="box-body">
+                <!-- Table row -->
+
+                            <table class="table table-striped" >
+                              <thead>
+                              <tr>
+                                <th width="80%">Content</th>
+                                <th width="13%">Date</th>
+                                <th >Action</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+
+                               <tr >
+
+                                    <td width="80%" style="color:orange" > The user with the id 1 missed his objective of walking 1 hour  </td>
+                                    <td width="13%">03/02/2017</td>
+                                    <td style>{{Form::button('Send Message',['onClick'=>'#'])}}</td>
+                              </tr>
+                               <tr>
+
+                                    <td width="80%" style="color:red"> The user with the id 4 send an emergency notification at 18:07 01/02/2017 on location  long : -4.09224 lat: 31.029382.  <br> Click to see on the map.   </td>
+                                    <td width="13%">03/02/2017</td>
+                                    <td >{{Form::button('Send Message',['onClick'=>'#'])}}</td>
+                              </tr>
+
+                              </tbody>
+                            </table>
+                       </div>
+                          <!-- /.col -->
+                </div>
+     
             </div>
+            
+            
+            
+            
               <!--***********************************************************-->
             <!--***************FIM - Warning do Utilizador*************-->
             <!--***********************************************************-->
@@ -321,91 +476,12 @@
 @stop
 
 
-@section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-    
-    
-    
-   <style type="text/css">
-  #list ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
- 
- #list li {
-  font: 200 15px/1.5 Helvetica, Verdana, sans-serif;
-  border-bottom: 1px solid #ccc;
-}
- 
- #list li:last-child {
-  border: none;
-}
- 
- #list li a {
-  text-decoration: none;
-  color: #000;
-  display: block;
-  width: 200px;
- 
-  -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
-  -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
-  -o-transition: font-size 0.3s ease, background-color 0.3s ease;
-  -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
-  transition: font-size 0.3s ease, background-color 0.3s ease;
-}
- 
- #list li a:hover {
-  font-size: 30px;
-  background: #f6f6f6;
-}
-
-#myInput {
-    background-image: url('/css/searchicon.png'); /* Add a search icon to input */
-    background-position: 10px 12px; /* Position the search icon */
-    background-repeat: no-repeat; /* Do not repeat the icon image */
-    width: 100%; /* Full-width */
-    font-size: 16px; /* Increase font-size */
-    padding: 12px 20px 12px 40px; /* Add some padding */
-    border: 1px solid #ddd; /* Add a grey border */
-    margin-bottom: 12px; /* Add some space below the input */
-}
-
-.historylist {
-    /* Remove default list styling */
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.historylist  li a {
-    border: 1px solid #ddd; /* Add a border to all links */
-    margin-top: -1px; /* Prevent double borders */
-    background-color: #f6f6f6; /* Grey background color */
-    padding: 12px; /* Add some padding */
-    text-decoration: none; /* Remove default text underline */
-    font-size: 18px; /* Increase the font-size */
-    color: black; /* Add a black text color */
-    display: block; /* Make it into a block element to fill the whole list */
-}
-
-.historylist  li a.header {
-    background-color: #e2e2e2; /* Add a darker background color for headers */
-    cursor: default; /* Change cursor style */
-}
-
-.historylist  li a:hover:not(.header) {
-    background-color: #eee; /* Add a hover effect to all links, except for headers */
-}
-    </style>
-    
-<link rel='stylesheet' href='/fullcalendar.css' />
-@stop
-
 @section('js')
 
     <!-- jQuery 2.2.3 -->
 <script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="/plugins/jQueryUI/jquery-ui.min.js"></script>
+
 <!-- Bootstrap 3.3.6 -->
 <!--<script src="/bootstrap/js/bootstrap.min.js"></script>-->
 <!-- FastClick -->
@@ -450,16 +526,15 @@
   }
 
 
+//               INICIO - Botão e formulário para adicionar Utilizadores -SCRIPT************************************************************************-->
          function addUser(){
-                document.getElementById("idUserPatientSelected").innerHTML =2;
-                $('#userContent').toggle().toggle();
-                         document.getElementById("userIdH3").innerHTML = "User : 5 + 6";     
-
-            statisticsUserSelected(2);
-    
+          
+                            
+                   $("#dialog-form").dialog('open');
+                   
         }
   
-  
+            //<!--*********FIM - Botão e formulário para adicionar Utilizadores -SCRIPT*************-->***********************************************-->
   
         function statisticsUserSelected(idUser,email)
         {
@@ -501,7 +576,8 @@
           }
           
           
-          /*********************************************************************
+          /* **
+          ******************************************************************
      ***************FIM Calendário - Google Calendar Embbed*************
      *********************************************************************/
     
@@ -915,7 +991,53 @@
         var multiplier = Math.pow(10, precision || 0);
         return Math.round(value * multiplier) / multiplier;
         }       
-              </script>
+        
+        
+        
+        
+//        
+//         //adicionar utilizador
+            $(function() {
+            var userEmails = <?php  echo json_encode($data['usersPatientsEmail']);?>;
+           
+                $( "#emails_AddUser" ).autocomplete({
+                    source: Object.values(userEmails)
+                    });
+
+                $( "#dialog-form" ).dialog({
+                    autoOpen: false,
+                    height: 300,
+                    width: 350,
+                    modal: true,
+                    buttons: {
+                        "Save value": function() {
+                            if ($("#emails_AddUser").val() != '') {
+                                $( this ).dialog( "close" );
+                            }
+                        },
+                        Cancel: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    },
+                    close: function() {
+                        $("#resultSearchUser").html($("#emails_AddUser").val());
+                    }             
+                });
+ 
+            });
+        
+        
+       
+        
+            
+            
+            
+            </script>
+              
+              
+              
+              
+             
       
 
 <!--
