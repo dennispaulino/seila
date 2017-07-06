@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 //use App\Http\Requests;
-//use Illuminate\Http\Request;
+use Request;
+use Illuminate\Support\Facades\Redirect;
 use GuzzleHttp\Client;
 use Auth;
 use Debugbar;
+
 class HomeController extends Controller
 {
     /**
@@ -28,17 +30,36 @@ class HomeController extends Controller
     {
         return view('home');
     }
+     public function adduser()
+    {
+        Debugbar::info("Deus é grande ;)"); 
+        Debugbar::info(Request::get('emails_AddUser')); 
+              
+        
+        $userid=Auth::user()->id;
+        
+        $emailUserPatient=Request::get('emails_AddUser') ;
+              
+        
+        $idUserPatient =  $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/user?email='.$emailUserPatient);
+    
+        
+        if($idUserPatient!=-1)
+        {
+            if( $this->callNanoSTIMAWebservicePOSTRelationUser('http://192.168.109.1/~nanostima/relationuser.php',$userid,$idUserPatient)!= -1) //se não existir uma  relação entre o profissional de saúde e ALGUM paciente, então retorna 0 senão retorna um array com vários dados dos pacientes (DailyRec, WalkRec, Steps...) 
+                {
+                     \Session::flash('alert-success', 'User '.Request::get('emails_AddUser').' was successful added!');
+                      return Redirect::to("/admin/users");
+               }
+        }
+       
+       \Session::flash('alert-warning', 'It was not possible to add the user '.Request::get('emails_AddUser').' !');
+         return Redirect::to("/admin/users");
+    }
      public function users()
     {
          //id do utilizador autenticado
-        $userid=Auth::user()->id;
-        
-        //pedido ao webservice para saber quais são os pacientes que o profissional logado tem (na bd -  relationuser)
-        $client = new Client();
-        $response = $client->get('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid);
-
-
-        $obj = json_decode($response->getBody());
+     
        
         if( $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid)== -1) //se não existir uma  relação entre o profissional de saúde e ALGUM paciente, então retorna 0 senão retorna um array com vários dados dos pacientes (DailyRec, WalkRec, Steps...) 
             {
@@ -246,5 +267,28 @@ class HomeController extends Controller
             }
     
     }
+    
+    function callNanoSTIMAWebservicePOSTRelationUser($url,$idUserPatient,$idUserProfessional)
+    {  // in this function it is called the webservice by the $url , that must include the parameters for the POST Request
+        // If the response returned in JSON of alldata->status->status is equal to 7 (success) then it return the obtained values, else returns -1
+        
+        $client= new Client();
+        $response = $client->request('POST',$url,['form_params' => ['idUserPatient' => $idUserPatient,'idUserProfessional' => $idUserProfessional,'dateStart' => date('Y-m-d H:i:s'),'state'=>1]]);
+
+        $obj = json_decode($response->getBody());
+
+        
+        
+        if( $obj->alldata->status->status==7)
+            {
+            return $obj->alldata->data->result;
+            }
+        else
+            {
+            return -1;
+            }
+    
+    }
+
 
 }

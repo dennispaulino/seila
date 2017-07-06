@@ -22,5 +22,6 @@ Route::get('/admin/users', 'HomeController@users');
 Route::get('/admin/profile', 'HomeController@profile');
 Route::post('/admin/profile', 'HomeController@profile');
 Route::get('/admin/warnings', 'HomeController@warnings');
+Route::get('/admin/adduser', 'HomeController@adduser');
 Route::get('/admin/home', 'HomeController@index');
 Route::get('/quickstart', 'HomeController@quick');

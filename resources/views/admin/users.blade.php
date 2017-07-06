@@ -121,7 +121,26 @@ ul.ui-autocomplete {
        ?>-->
 
 <!--                Debugbar::info($array_o)        -->
-                    
+    
+
+
+ <!--***********************************************************-->
+       <!--***************INICIO - Mostrar mensagens sobre operações com falhas ou bem sucedidas que o utilizador executou no WebSite*************-->
+       <!--***********************************************************-->
+<div class="flash-message" id="flashMessage">
+    @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+      @if(Session::has('alert-' . $msg))
+
+      <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></p>
+      @endif
+    @endforeach
+  </div> <!-- end .flash-message -->
+   <!--***********************************************************-->
+       <!--***************FIM - Mostrar mensagens sobre operações com falhas ou bem sucedidas que o utilizador executou no WebSite*************-->
+       <!--***********************************************************-->
+  
+  
+  
                       
                     {{Debugbar::info($data['usersPatientsAllDailyRec'])}}     
                     
@@ -171,8 +190,12 @@ ul.ui-autocomplete {
            
             <div id="dialog-form" title="Search">
                 <div class="ui-widget">
+                    
+                <form id="addUserForm" action="/admin/adduser" method="get">
+
                     <label for="emails_AddUser" >Emails : </label>
-                    <input id="emails_AddUser" />
+                    <input id="emails_AddUser"  name="emails_AddUser"/>
+                </form>
                 </div>
             </div>
                 
@@ -1020,6 +1043,7 @@ ul.ui-autocomplete {
                         }
                     },
                     close: function() {
+                        document.getElementById('addUserForm').submit();
                         $("#resultSearchUser").html($("#emails_AddUser").val());
                     }             
                 });
@@ -1028,7 +1052,11 @@ ul.ui-autocomplete {
         
         
        
+        //função para fazer desaparecer as mensagens de alerta, vindas dos controllers
         
+         setTimeout(function() {
+            $('#flashMessage').fadeOut('fast');
+            }, 10000);
             
             
             
