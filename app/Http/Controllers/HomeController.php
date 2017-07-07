@@ -11,6 +11,10 @@ use Debugbar;
 
 class HomeController extends Controller
 {
+    
+    
+    
+     
     /**
      * Create a new controller instance.
      *
@@ -31,35 +35,37 @@ class HomeController extends Controller
         return view('home');
     }
      public function adduser()
-    {
+    {  $userid=Auth::user()->id;
         Debugbar::info("Deus é grande ;)"); 
         Debugbar::info(Request::get('emails_AddUser')); 
               
         
-        $userid=Auth::user()->id;
+     
         
         $emailUserPatient=Request::get('emails_AddUser') ;
               
         
-        $idUserPatient =  $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/user?email='.$emailUserPatient);
+        $idUserPatient =  $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/user.php?email='.$emailUserPatient);
     
-        
         if($idUserPatient!=-1)
         {
-            if( $this->callNanoSTIMAWebservicePOSTRelationUser('http://192.168.109.1/~nanostima/relationuser.php',$userid,$idUserPatient)!= -1) //se não existir uma  relação entre o profissional de saúde e ALGUM paciente, então retorna 0 senão retorna um array com vários dados dos pacientes (DailyRec, WalkRec, Steps...) 
+           Debugbar::info("Falhou no user id Patient "); 
+                 Debugbar::info($idUserPatient[0]->id); 
+            if( $this->callNanoSTIMAWebservicePOSTRelationUser('http://192.168.109.1/~nanostima/relationuser.php',$userid,$idUserPatient[0]->id)!= -1) //se não existir uma  relação entre o profissional de saúde e ALGUM paciente, então retorna 0 senão retorna um array com vários dados dos pacientes (DailyRec, WalkRec, Steps...) 
                 {
                      \Session::flash('alert-success', 'User '.Request::get('emails_AddUser').' was successful added!');
-                      return Redirect::to("/admin/users");
+                   
+                  return Redirect::to("/admin/users");
                }
         }
        
        \Session::flash('alert-warning', 'It was not possible to add the user '.Request::get('emails_AddUser').' !');
-         return Redirect::to("/admin/users");
+      return Redirect::to("/admin/users");
     }
      public function users()
     {
          //id do utilizador autenticado
-     
+       $userid=Auth::user()->id;
        
         if( $this->callNanoSTIMAWebserviceGET('http://192.168.109.1/~nanostima/relationuser.php?idUserProfessional='.$userid)== -1) //se não existir uma  relação entre o profissional de saúde e ALGUM paciente, então retorna 0 senão retorna um array com vários dados dos pacientes (DailyRec, WalkRec, Steps...) 
             {
@@ -225,6 +231,7 @@ class HomeController extends Controller
            
            Debugbar::info( "Todos os registos dos Steps dos pacientes associados ao profissional de saúde");  
             Debugbar::info(  $usersPatientsAllStep);  
+             Debugbar::info(  $usersPatients);  
             Debugbar::info(  $usersPatientsAllPainLevelbasedOnWalkRec);  
             Debugbar::info(  $usersPatientsAllPausebasedOnWalkRec);      
             Debugbar::info(  $usersPatientsAllWalkRec); 
@@ -239,7 +246,7 @@ class HomeController extends Controller
     }
     public function warnings()
     {
-        return view('admin.warnings');
+     
     }
       public function quick()
     {
@@ -268,7 +275,7 @@ class HomeController extends Controller
     
     }
     
-    function callNanoSTIMAWebservicePOSTRelationUser($url,$idUserPatient,$idUserProfessional)
+    function callNanoSTIMAWebservicePOSTRelationUser($url,$idUserProfessional,$idUserPatient)
     {  // in this function it is called the webservice by the $url , that must include the parameters for the POST Request
         // If the response returned in JSON of alldata->status->status is equal to 7 (success) then it return the obtained values, else returns -1
         
@@ -279,7 +286,7 @@ class HomeController extends Controller
 
         
         
-        if( $obj->alldata->status->status==7)
+        if( $obj->alldata->status[0]->status==7)
             {
             return $obj->alldata->data->result;
             }

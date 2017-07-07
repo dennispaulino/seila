@@ -1014,7 +1014,9 @@ ul.ui-autocomplete {
         var multiplier = Math.pow(10, precision || 0);
         return Math.round(value * multiplier) / multiplier;
         }       
-        
+        function isEmpty(str) {
+        return (!str || 0 === str.length);
+    }
         
         
         
@@ -1022,7 +1024,19 @@ ul.ui-autocomplete {
 //         //adicionar utilizador
             $(function() {
             var userEmails = <?php  echo json_encode($data['usersPatientsEmail']);?>;
-           
+            var userPatients = <?php  echo json_encode($data['usersPatients']);?>;
+    
+        
+    
+                //remover do array usersemails os emails que já estão associados a este profissional de saude logado
+               for (keyUserPatient of userPatients)
+                {
+                   delete userEmails[keyUserPatient.idUserPatient];
+             
+                }
+
+                
+                
                 $( "#emails_AddUser" ).autocomplete({
                     source: Object.values(userEmails)
                     });
@@ -1043,8 +1057,8 @@ ul.ui-autocomplete {
                         }
                     },
                     close: function() {
-                        document.getElementById('addUserForm').submit();
-                        $("#resultSearchUser").html($("#emails_AddUser").val());
+                        if(!isEmpty($("#emails_AddUser").val()))
+                      document.getElementById('addUserForm').submit();
                     }             
                 });
  
