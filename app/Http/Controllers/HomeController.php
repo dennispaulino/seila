@@ -30,6 +30,143 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+   public function loadxlsx()
+    {
+        return view('/admin/loadxlsx');
+    }
+    public function submitcsv()
+    {
+        if(Request::exists('csvData'))
+        {
+            
+            //falta buscar o id do paciente!!!!!!!
+         Debugbar::info(Request::get('csvData')); 
+         $arrayJson_FROMCSV_Data =json_decode(Request::get('csvData'));
+        
+            if($arrayJson_FROMCSV_Data!= null )
+            { 
+                    if($arrayJson_FROMCSV_Data != FALSE)
+                   {        
+                        
+                        $skipFirstLoop=false;
+                            foreach ( $arrayJson_FROMCSV_Data as $rowData)
+                            {
+                                if (!$skipFirstLoop)
+                                {
+                                    $skipFirstLoop=true;
+                                    continue;
+                                    
+                                    
+                                  if(isset($rowData->{'Data Sessao'}))
+                                  {
+                                     $dateStart=new DateTime ($rowData->{'Data Sessao'});
+                                      Debugbar::info("DateSTart:".$dateStart->format('Y-m-d'));
+                                    
+                                         
+                                      $speed_Session=-1;
+                                      if(isset($rowData->velocidade))
+                                      {
+                                          $speed_Session=$rowData->velocidade;
+                                      }
+                                      
+                                        $elevation_Session=-1;
+                                      if(isset($rowData->velocidade))
+                                      {
+                                          $elevation_Session=$rowData->inclinação;
+                                      }
+                                   
+                                      $id_Session=-1;
+                                      
+                                        if(isset($rowData->{'Sessao nº'}))
+                                        {
+                                         $id_Session=$rowData->{'Sessao nº'};
+                                        }
+                                        
+                                       $PSE_5_min_Session=-1;
+                                      
+                                        if(isset($rowData->{'PSE 5'}))
+                                        {
+                                         $PSE_5_min_Session=$rowData->{'Sessao nº'};
+                                        }
+                                        
+                                         $PSE_10_min_Session=-1;
+                                      
+                                        if(isset($rowData->{'PSE 10'}))
+                                        {
+                                         $PSE_10_min_Session=$rowData->{'PSE 10'};
+                                        }
+                                        
+                                        
+                                         $PSE_15_min_Session=-1;
+                                      
+                                        if(isset($rowData->{'PSE 15'}))
+                                        {
+                                         $PSE_15_min_Session=$rowData->{'PSE 15'};
+                                        }
+                                        
+                                         $PSE_20_min_Session=-1;
+                                      
+                                        if(isset($rowData->{'PSE 20'}))
+                                        {
+                                         $PSE_20_min_Session=$rowData->{'PSE 20'};
+                                        }
+                                        
+                                        
+                                         $PSE_25_min_Session=-1;
+                                      
+                                        if(isset($rowData->{'PSE 25'}))
+                                        {
+                                         $PSE_25_min_Session=$rowData->{'PSE 25'};
+                                        }
+                                        
+                                           
+                                         $PSE_30_min_Session=-1;
+                                      
+                                        if(isset($rowData->{'PSE 30'}))
+                                        {
+                                         $PSE_30_min_Session=$rowData->{'PSE 30'};
+                                        }
+                                        
+                                           
+                                         $PSE_35_min_Session=-1;
+                                      
+                                        if(isset($rowData->{'PSE 35'}))
+                                        {
+                                         $PSE_35_min_Session=$rowData->{'PSE 35'};
+                                        }
+                                        
+                                          $PSE_40_min_Session=-1;
+                                      
+                                        if(isset($rowData->{'PSE 40'}))
+                                        {
+                                         $PSE_40_min_Session=$rowData->{'PSE 40'};
+                                        }
+                                        
+                                        
+                                        
+                                      
+                                   callNanoSTIMAWebservicePOSTWalkRecordSessionUser($dateStart->format('Y-m-d'),'falta por o id',1,$speed_Session,$elevation_Session,$id_Session,$PSE_5_min_Session,$PSE_10_min_Session,$PSE_15_min_Session,$PSE_20_min_Session,$PSE_25_min_Session,$PSE_30_min_Session,$PSE_35_min_Session,$PSE_40_min_Session);
+                                   //$idUser,$state,$speed_Session,$elevation_Session,$id_Session,$PSE_5_min_Session,$PSE_10_min_Session,$PSE_15_min_Session,$PSE_20_min_Session,$PSE_25_min_Session,$PSE_30_min_Session,$PSE_35_min_Session,$PSE_40_min_Session)
+                                  }
+                                }
+                                
+                                
+                                
+                                
+                            }
+                        
+                       \Session::flash('alert-success', 'User '.$arrayJson_FROMCSV_Data[2]->velocidade.' was successful added!');
+                        return Redirect::to("/admin/loadxlsx");
+                   }
+             }
+        }
+        
+         
+        \Session::flash('alert-warning', 'It was not possible to save the data in the database!');
+        
+              return Redirect::to("/admin/loadxlsx");
+    }
+    
     public function index()
     {
         return view('home');
@@ -296,6 +433,32 @@ class HomeController extends Controller
             }
     
     }
+    
+      function callNanoSTIMAWebservicePOSTWalkRecordSessionUser($dateStart,$idUser,$state,$speed_Session,$elevation_Session,$id_Session,$PSE_5_min_Session,$PSE_10_min_Session,$PSE_15_min_Session,$PSE_20_min_Session,$PSE_25_min_Session,$PSE_30_min_Session,$PSE_35_min_Session,$PSE_40_min_Session)
+    {  // in this function it is called the webservice by the $url , that must include the parameters for the POST Request
+        // If the response returned in JSON of alldata->status->status is equal to 7 (success) then it return the obtained values, else returns -1
+        
+        $client= new Client();
+        
+        
+        //dateStart=2017-10-8&dateEnd=2017-10-15&distanceGPS=2&altitudeDelta=2&idUser=13&state=1&speed_Session=22&elevation_Session=2&id_Session=1&PSE_5_min_Session=1&PSE_10_min_Session=1&PSE_15_min_Session=2&PSE_20_min_Session=1&PSE_25_min_Session=1&PSE_30_min_Session=4&PSE_35_min_Session=1&PSE_40_min_Session=1
+        $response = $client->request('POST',"http://192.168.109.1/~nanostima/walkrecord.php",['form_params' => ['idUserPatient' => $idUserPatient,'idUserProfessional' => $idUserProfessional,'dateStart' => date('Y-m-d H:i:s'),'state'=>1]]);
+
+        $obj = json_decode($response->getBody());
+
+        
+        
+        if( $obj->alldata->status[0]->status==7)
+            {
+            return $obj->alldata->data->result;
+            }
+        else
+            {
+            return -1;
+            }
+    
+    }
+
 
 
 }

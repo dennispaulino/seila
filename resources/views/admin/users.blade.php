@@ -304,7 +304,7 @@ ul.ui-autocomplete {
                 
 
                   <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                     
 
                    
@@ -313,7 +313,7 @@ ul.ui-autocomplete {
                         <div class="box-header with-border">
                           <i class="fa fa-bar-chart-o"></i>
 
-                          <h3 class="box-title">Distance walked chart</h3>
+                          <h3 class="box-title">Distance walked chart (kilometers)</h3>
 
                           <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -330,7 +330,7 @@ ul.ui-autocomplete {
                     </div>
                      
                       
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                     <!-- Donut chart -->
                       <div class="box box-primary">
                         <div class="box-header with-border">
@@ -436,7 +436,7 @@ ul.ui-autocomplete {
                 <div class="tab-content">
                     <div id="dailyrec" class="tab-pane fade  active in">
                        <div class="list-group">
-                            <input type="text" id="inputDailyRecordSearch" onkeyup="SearchInHistoryTab('inputDailyRecordSearch','dailyrecUL')" placeholder="Search for daily records...">
+                            <input type="text" id="inputDailyRecordSearch" onkeyup="SearchInHistoryTab('inputDailyRecordSearch','dailyrecUL')" placeholder="Search for daily records..."/>
 
                                 <ul id="dailyrecUL" class="historylist">
                                
@@ -449,11 +449,24 @@ ul.ui-autocomplete {
                     
                     <div id="walkrec" class="tab-pane fade">
                         <div class="list-group">
-                             <input type="text" id="inputWalkRecordSearch" onkeyup="SearchInHistoryTab('inputWalkRecordSearch','walkrecUL')" placeholder="Search for walk records...">
-                                 <ul id="walkrecUL" class="historylist">
+                            <div class="row"> 
+                                 <div class="col-sm-4 col-lg-3"> 
+                            <input type="text" id="inputWalkRecordSearch" onkeyup="SearchInHistoryTab('inputWalkRecordSearch','walkrecUL')" placeholder="Search for walk records..." />
+                                </div>
+                                <div class="col-sm-4 col-lg-5"> 
+                            <button  onclick="descendHistoryList()">Date descending</button> 
+                            
+                             <button   onclick="ascendHistoryList()">Date ascending</button> 
+                             </div>
+                               </div>
+                             </div>
+                             <ul id="walkrecUL" class="historylist">
                                
-                                  
-                                </ul> 
+                                   
+                             </ul> 
+                             
+                             
+                            
                         </div>
                         
                     </div>
@@ -714,7 +727,6 @@ ul.ui-autocomplete {
           var sixDayBeforeFullFormat=returnDateBeforeDaysFormatYYYYMMDD(6);
 
 
-
            var actualDayDistance = 0 ;
           var oneDayBeforeDistance = 0 ;
           var twoDayBeforeDistance  = 0 ;
@@ -746,44 +758,44 @@ ul.ui-autocomplete {
                               case actualDayFullFormat:
                               for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
                                   {
-                                  actualDayDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                                  actualDayDistance+=parseFloat(arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance);
                                   }
                                   break;
                               case oneDayBeforeFullFormat:
                                for(var j=0;j<arrayStep[idUserPatientSelected][idDailyRecAux].length;j++)
                                   {
-                                  oneDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                                  oneDayBeforeDistance+=parseFloat(arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance);
                                   }
 
                                   break;
                               case twoDayBeforeFullFormat:
                               for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
                                   {
-                                  twoDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                                  twoDayBeforeDistance+=parseFloat(arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance);
                                   }
                                   break;
                               case threeDayBeforeFullFormat:
                               for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
                                   {
-                                  threeDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                                  threeDayBeforeDistance+=parseFloat(arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance);
                                   }
                                   break;
                               case fourDayBeforeFullFormat:
                               for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
                                   {
-                                  fourDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                                  fourDayBeforeDistance+=parseFloat(arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance);
                                   }
                                   break;
                               case fiveDayBeforeFullFormat:
                               for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
                                   {
-                                  fiveDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                                  fiveDayBeforeDistance+=parseFloat(arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance);
                                   }
                                   break;
                               case sixDayBeforeFullFormat:
                               for(var j=0;j<arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec].length;j++)
                                   {
-                                  sixDayBeforeDistance+=arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance;
+                                  sixDayBeforeDistance+=parseFloat(arrayStep[idUserPatientSelected][arrayDailyRec[idUserPatientSelected][i].idDailyRec][j].distance);
                                   }
                                   break;
                               default:
@@ -798,8 +810,9 @@ ul.ui-autocomplete {
                     }
                 }
             }
+            
           var bar_data = {
-            data: [[sixDayBefore, sixDayBeforeDistance], [fiveDayBefore, fiveDayBeforeDistance], [fourDayBefore, fourDayBeforeDistance], [threeDayBefore, threeDayBeforeDistance], [twoDayBefore, twoDayBeforeDistance], [oneDayBefore, oneDayBeforeDistance],[actualDay, actualDayDistance]],
+            data: [[sixDayBefore, sixDayBeforeDistance/1000], [fiveDayBefore, fiveDayBeforeDistance/1000], [fourDayBefore, fourDayBeforeDistance/1000], [threeDayBefore, threeDayBeforeDistance/1000], [twoDayBefore, twoDayBeforeDistance/1000], [oneDayBefore, oneDayBeforeDistance/1000],[actualDay, actualDayDistance/1000]],
             color: "#3c8dbc"
           };
 
@@ -807,7 +820,7 @@ ul.ui-autocomplete {
 
           $.plot("#bar-chart", [bar_data], {
             grid: {
-              borderWidth: 1,
+              borderWidth: 0.5,
               borderColor: "#f3f3f3",
               tickColor: "#f3f3f3"
             },
@@ -821,7 +834,7 @@ ul.ui-autocomplete {
             xaxis: {
               mode: "categories",
               tickLength: 0,
-              min:0
+          min:0
             
             },
             yaxis: {
@@ -867,7 +880,7 @@ ul.ui-autocomplete {
                           }
                              
                         countStep=round(countStep,1);
-                       ulHTMLCode += "<li> <a href='#historytabwalkrecid_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' onclick='toogleWalkRecPainLevelChart("+idUserPatientSelected+","+i+")' data-toggle='collapse'>Date Start: " + arrayWalkRec[idUserPatientSelected][i].dateStart+"  Date End: " + arrayWalkRec[idUserPatientSelected][i].dateEnd+"  Distance GPS (meters): " + arrayWalkRec[idUserPatientSelected][i].distanceGPS+"  Distance Step (meters): " + countStep+"</a><div id='historytabwalkrecid_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' class='collapse' ><div class='box box-primary'>                         <div class='box-header with-border'>                           <i class='fa fa-bar-chart-o'></i>                            <h3 class='box-title'>Pain Level chart</h3>                                            </div>                         <div class='box-body'>                           <div id='historytabwalkrecid2_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' style='height: 300px;'></div>                         </div>                                           </div></div></li>";
+                       ulHTMLCode += "<li> <a href='#historytabwalkrecid_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' onclick='toogleWalkRecPainLevelChart("+idUserPatientSelected+","+i+")' data-toggle='collapse'>Date Start: " + arrayWalkRec[idUserPatientSelected][i].dateStart+"; Date End: " + arrayWalkRec[idUserPatientSelected][i].dateEnd+";  Distance GPS (meters): " + arrayWalkRec[idUserPatientSelected][i].distanceGPS+"  Distance Step (meters): " + countStep+"</a><div id='historytabwalkrecid_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' class='collapse' ><div class='box box-primary'>                         <div class='box-header with-border'>                           <i class='fa fa-bar-chart-o'></i>                            <h3 class='box-title'>Pain Level chart</h3>                                            </div>                         <div class='box-body'>                           <div id='historytabwalkrecid2_"+arrayWalkRec[idUserPatientSelected][i].idWalkRec+"' style='height: 300px;'></div>                         </div>                                           </div></div></li>";
                      }  
                      
                
@@ -1074,6 +1087,140 @@ ul.ui-autocomplete {
             
             
             
+           
+
+function descendingSort(ulTag){
+var ul=document.getElementById(ulTag);
+        var new_ul = ul.cloneNode(false);
+
+
+    // Add all lis to an array
+    var lis = [];
+    for(var i = ul.childNodes.length; i--;){
+        if(ul.childNodes[i].nodeName === 'LI')
+            lis.push(ul.childNodes[i]);
+    }
+
+
+    ul.childNodes[2].innerHTML.split("Date Start:")[1].split(";")[0];
+    // Sort the lis in descending order
+  
+    lis.sort(function(a, b){
+       return parseInt(b.childNodes[0].data.split(";")[0] , 10) - 
+              parseInt(a.childNodes[0].data.split(";")[0] , 10);
+    });
+
+
+    // Add them into the ul in order
+    for(var i = 0; i < lis.length; i++)
+        new_ul.appendChild(lis[i]);
+    
+    ul.parentNode.replaceChild(new_ul, ul);
+}
+
+
+function ascendingSort(ulTag){
+    var ul=document.getElementById(ulTag);
+var new_ul = ul.cloneNode(false);
+
+    // Add all lis to an array
+    var lis = [];
+    for(var i = ul.childNodes.length; i--;){
+        if(ul.childNodes[i].nodeName === 'LI')
+        {    lis.push(ul.childNodes[i]);
+       
+            }
+        
+    }
+
+    // Sort the lis in descending order
+    lis.sort(function(a, b){
+       return parseInt(b.childNodes[0].data.split("Date Start:")[1].split(";")[0] , 10) - 
+              parseInt(a.childNodes[0].data.split("Date Start:")[1].split(";")[0] , 10);
+    });
+
+    // Add them into the ul in order
+    for(var i = 0; i < lis.length; i++)
+        new_ul.appendChild(lis[i]);
+    ul.parentNode.replaceChild(new_ul, ul);
+    
+    
+}
+        function descendHistoryList() {
+  var list, i, switching, b, shouldSwitch;
+  list = document.getElementById("walkrecUL");
+  switching = true;
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    b = list.getElementsByTagName("LI");
+    //Loop through all list-items:
+          
+    
+    for (i = 0; i < (b.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*check if the next item should
+      switch place with the current item:*/
+                
+                
+            
+      if (b[i].innerHTML.split("Date Start:")[1].split(";")[0] < b[i + 1].innerHTML.split("Date Start:")[1].split(";")[0]) {
+        /*if next item is alphabetically
+        lower than current item, mark as a switch
+        and break the loop:*/
+        shouldSwitch= true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark the switch as done:*/
+      b[i].parentNode.insertBefore(b[i + 1], b[i]);
+      switching = true;
+    }
+  }
+}    
+
+   function ascendHistoryList() {
+  var list, i, switching, b, shouldSwitch;
+  list = document.getElementById("walkrecUL");
+  switching = true;
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    b = list.getElementsByTagName("LI");
+    //Loop through all list-items:
+          
+    
+    for (i = 0; i < (b.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*check if the next item should
+      switch place with the current item:*/
+                
+                
+            
+      if (b[i].innerHTML.split("Date Start:")[1].split(";")[0] > b[i + 1].innerHTML.split("Date Start:")[1].split(";")[0]) {
+        /*if next item is alphabetically
+        lower than current item, mark as a switch
+        and break the loop:*/
+        shouldSwitch= true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark the switch as done:*/
+      b[i].parentNode.insertBefore(b[i + 1], b[i]);
+      switching = true;
+    }
+  }
+}    
             </script>
               
               
@@ -1192,6 +1339,36 @@ function SearchInHistoryTab(inputID,ulistID) {
     }
 }
 </script>
+
+<!--
+************************************************************
+******************************END************************
+**************Function for Search Bar in History Tab*******************
+************************************************************-->
+
+
+
+
+<!--
+**************************************************************************************************************************************
+******************************INICIO**************************************************************************************************
+**************Function to load csv from SESSION IN HOSPITAL NANOSTIMA PROGRAM to send the retrieved data to database******************
+**************************************************************************************************************************************-->
+
+
+
+
+
+
+
+<!--
+**************************************************************************************************************************************
+******************************END**************************************************************************************************
+**************Function to load csv from SESSION IN HOSPITAL NANOSTIMA PROGRAM to send the retrieved data to database******************
+**************************************************************************************************************************************-->
+
+
+
 
 
 
